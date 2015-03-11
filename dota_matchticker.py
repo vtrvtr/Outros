@@ -1,4 +1,5 @@
 
+from subprocess import call
 import json
 import urllib2
 import pprint
@@ -13,13 +14,13 @@ class Streams(object):
             self.streams = {}
 
     def addStream(self, game, stream_url):
-        if stream_url not in self.streams.values():
-            if game.upper() in self.streams:
+        try:
+            if stream_url not in self.streams[game.upper()]:
                 self.streams[game.upper()].append(stream_url)
             else:
-                self.streams[game.upper()] = [stream_url]
-        else:
-            return 'Stream already there'
+                pass
+        except:
+            self.streams[game.upper()] = [stream_url]
 
     def getStream(self, stream_url):
         for v in self.streams.values():
@@ -29,35 +30,32 @@ class Streams(object):
     def getAllStreams(self):
         return self.streams
 
+    def getGameStreams(self, game):
+        return self.streams[game]
 
-def main():
-    add_list = '''livestreamer.exe http://www.twitch.tv/beyondthesummit2 source
-livestreamer.exe http://www.twitch.tv/beyondthesummit source
-livestreamer.exe http://www.twitch.tv/dotastarladder_en source
-livestreamer.exe http://www.twitch.tv/joindotared source
-livestreamer.exe http://www.dailymotion.com/embed/video/x1b1h6o best
-livestreamer.exe http://www.twitch.tv/joindotablue source
-livestreamer.exe http://www.twitch.tv/joindotacommunity source
-livestreamer.exe http://www.twitch.tv/dotacinema/popout best
-livestreamer.exe http://www.twitch.tv/d2l source
-livestreamer.exe http://www.twitch.tv/neodota source
-livestreamer.exe http://www.hitbox.tv/bountyhunterseries source
-livestreamer.exe http://www.twitch.tv/esltv_dota source
-livestreamer.exe http://www.dailymotion.com/embed/video/x1b1h6o?autoplay=1&hidePopoutButton=1 best
-livestreamer.exe http://www.twitch.tv/dreamleague/popout best   
-livestreamer.exe http://www.twitch.tv/highgroundtv/popout best
-livestreamer.exe http://www.twitch.tv/esportal/popout best'''
-    urls = add_list.split()[1::3]
+
+def open_dict():
     with open('E:\Code\Outros\stream_list.json') as f:
-        stream_dict = json.load(f)
-        stream = Streams(stream_dict)
-        for url in urls:
-            stream_dict.addStream('DOTA', url)
+        read_dict = json.load(f)
+        stream_dict = Streams(read_dict)
+    return stream_dict
+
+
+def add_streams(url, game):
+    stream = open_dict()
+    stream_dict.addStream(game.upper(), url)
+    with open('E:\Code\Outros\stream_list.json', 'w') as f:
         json.dump(stream_dict.getAllStreams(), f)
 
-main()
+
+def open_livestreamer(stream_urls):
+    for stream_url in stream_urls:
+        call('livestreamer {} source'.format(str(stream_url)))
 
 
-from subprocess import call
+def main(game):
+    streams = open_dict()
+    open_livestreamer(streams.getGameStreams(game.upper()))
 
-# call('livestreamer twitch.tv/joindotared source')
+
+main('dota')
