@@ -1,10 +1,11 @@
 import argparse
+import logging
 import sys
 from subprocess import Popen
 import json
 
 
-class Streams(object):
+class Streams(object): #Base stream class, you need to load the dictionary
 
     def __init__(self, stream_dict=None):
         if stream_dict is not None:
@@ -32,9 +33,9 @@ class Streams(object):
     def getGameStreams(self, game):
         return self.streams[game]
 
-
+STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json' 
 def open_dict():
-    with open('E:\Code\Outros\stream_list.json') as f:
+    with open(STREAM_LIST_PATH) as f:
         read_dict = json.load(f)
         stream_dict = Streams(read_dict)
     return stream_dict
@@ -43,7 +44,7 @@ def open_dict():
 def add_streams(url, game):
     stream_dict = open_dict()
     stream_dict.addStream(game.upper(), url)
-    with open('E:\Code\Outros\stream_list.json', 'w') as f:
+    with open(STREAM_LIST_PATH, 'w') as f:
         json.dump(stream_dict.getAllStreams(), f)
 
 
@@ -62,12 +63,15 @@ def main(game=None):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        parser = argparse.ArgumentParser(description='Game streams to open')
+    parser = argparse.ArgumentParser(description='Game streams to open')
+    if len(sys.argv) == 2:
         parser.add_argument('game')
-        parser.add_argument('url')
         args = parser.parse_args()
-        add_streams(args.url, args.game)
         main(args.game)
+    elif len(sys.argv) == 3:
+        parser.add_argument('url',  help="add stream to the list")
+        parser.add_argument('add_game',  help="add stream to the list")
+        args = parser.parse_args()
+        add_streams(args.url, args.add_game)
     else:
         main()
