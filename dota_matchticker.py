@@ -32,14 +32,15 @@ class Streams(object):
     def getGameStreams(self, game):
         return self.streams[game]
 
-
 def open_dict():
     with open('E:\Code\Outros\stream_list.json') as f:
+        read_dict = json.load(f)
+        stream_dict = Streams(read_dict)
     return stream_dict
 
 
 def add_streams(url, game):
-    stream = open_dict()
+    stream_dict = open_dict()
     stream_dict.addStream(game.upper(), url)
     with open('E:\Code\Outros\stream_list.json', 'w') as f:
         json.dump(stream_dict.getAllStreams(), f)
@@ -60,8 +61,8 @@ def main(game=None):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Game streams to open')
     if len(sys.argv) == 2:
-        parser = argparse.ArgumentParser(description='Game streams to open')
         parser.add_argument('game')
         args = parser.parse_args()
         main(args.game)
