@@ -1,8 +1,7 @@
-
-from subprocess import call
+import argparse
+import sys
+from subprocess import Popen
 import json
-import urllib2
-import pprint
 
 
 class Streams(object):
@@ -50,12 +49,23 @@ def add_streams(url, game):
 
 def open_livestreamer(stream_urls):
     for stream_url in stream_urls:
-        call('livestreamer {} source'.format(str(stream_url)))
+        Popen('livestreamer {} source'.format(str(stream_url)))
 
 
-def main(game):
+def main(game=None):
     streams = open_dict()
-    open_livestreamer(streams.getGameStreams(game.upper()))
+    if game == None:
+        for v in streams.getAllStreams().values():
+            open_livestreamer(v)
+    else:
+        open_livestreamer(streams.getGameStreams(game.upper()))
 
 
-main('dota')
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        parser = argparse.ArgumentParser(description='Game streams to open')
+        parser.add_argument('game')
+        args = parser.parse_args()
+        main(args.game)
+    else:
+        main()
