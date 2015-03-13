@@ -5,7 +5,7 @@ from subprocess import Popen
 import json
 
 
-class Streams(object): #Base stream class, you need to load the dictionary
+class Streams(object):  # Base stream class, you need to load the dictionary
 
     def __init__(self, stream_dict=None):
         if stream_dict is not None:
@@ -33,7 +33,9 @@ class Streams(object): #Base stream class, you need to load the dictionary
     def getGameStreams(self, game):
         return self.streams[game]
 
-STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json' 
+STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
+TEXT_PATH = ''
+
 def open_dict():
     with open(STREAM_LIST_PATH) as f:
         read_dict = json.load(f)
@@ -61,6 +63,16 @@ def main(game=None):
     else:
         open_livestreamer(streams.getGameStreams(game.upper()))
 
+
+def massive_add(TEXT_PATH):
+    with open(text, 'r') as f:
+        lines = [line.strip() for line in f.readlines()]
+        for line in lines:
+            if line == line.upper():
+                game = line
+            else:
+                url = line.split()
+                add_streams(url[1::3], game)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
