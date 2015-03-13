@@ -34,7 +34,7 @@ class Streams(object):  # Base stream class, you need to load the dictionary
         return self.streams[game]
 
 STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
-TEXT_PATH = ''
+TEXT_PATH = 'E:\\Documents\livestreamer.txt'
 
 def open_dict():
     with open(STREAM_LIST_PATH) as f:
@@ -45,7 +45,7 @@ def open_dict():
 
 def add_streams(url, game):
     stream_dict = open_dict()
-    stream_dict.addStream(game.upper(), url)
+    stream_dict.addStream(game.upper(), str(url))
     with open(STREAM_LIST_PATH, 'w') as f:
         json.dump(stream_dict.getAllStreams(), f)
 
@@ -64,7 +64,7 @@ def main(game=None):
         open_livestreamer(streams.getGameStreams(game.upper()))
 
 
-def massive_add(TEXT_PATH):
+def massive_add(text):
     with open(text, 'r') as f:
         lines = [line.strip() for line in f.readlines()]
         for line in lines:
@@ -72,7 +72,7 @@ def massive_add(TEXT_PATH):
                 game = line
             else:
                 url = line.split()
-                add_streams(url[1::3], game)
+                add_streams(''.join(url[1::3]), game)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
