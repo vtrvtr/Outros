@@ -39,17 +39,19 @@ def problem_6(list_of_numbers, action):
     else:
         'Usage: problem_6 list of numbers + * for the action'
 
+def problem_7(string):
+    return ''.join([char for char in reversed(string)])
+
+
+
 
 def test():
     print problem_1(3, 4)
-
     print problem_2(13, 8, 24)
-
     print problem_3([2, 2, 2, 2, 2, 2])
-
     print problem_4('b')
-
     print problem_5('this is fun')
-    print problem_6([2,2], '+')
-    print problem_6([3,3,3], '*') 
+    print problem_6([2, 2], '+')
+    print problem_6([3, 3, 3], '*')
+    print problem_7('aya lmao')
 test()

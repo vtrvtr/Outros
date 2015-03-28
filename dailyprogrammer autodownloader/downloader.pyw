@@ -9,7 +9,7 @@ import sys
 base_dir = os.path.dirname(r'E:\Code\Exercise-Codes\lol')
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-handler = logging.FileHandler('downloader_log.log')
+handler = logging.FileHandler(r'E:\Code\Outros\dailyprogrammer autodownloader\downloader_log.log')
 handler.setLevel(logging.INFO)
 logger.addHandler(handler)
 
