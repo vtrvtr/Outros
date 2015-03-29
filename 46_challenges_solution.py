@@ -39,10 +39,28 @@ def problem_6(list_of_numbers, action):
     else:
         'Usage: problem_6 list of numbers + * for the action'
 
-def problem_7(string):
+
+def problem_7(string):  # Returns reversed string
     return ''.join([char for char in reversed(string)])
 
 
+def problem_8(string):  # Returns True if word is palindrome, uses problem_7
+    return True if string == problem_7(string) else False
+
+
+def problem_9(token, list_of_things):
+    for thing in list_of_things:
+        if thing == token:
+            return True
+    return False
+
+
+def problem_10(list_one, list_two):
+    for item1 in list_one:
+        for item2 in list_two:
+            if item1 == item2:
+                return True
+    return False
 
 
 def test():
@@ -54,4 +72,8 @@ def test():
     print problem_6([2, 2], '+')
     print problem_6([3, 3, 3], '*')
     print problem_7('aya lmao')
+    print problem_8('radar')
+    print problem_9('a', ['2', 2, 45, 'd'])
+    print problem_10([1, 2, 3, 4, True], ['lol', 1])
+
 test()
