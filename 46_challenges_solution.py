@@ -62,6 +62,18 @@ def problem_10(list_one, list_two):
                 return True
     return False
 
+def problem_11(number_to_multiply, char):
+    result = []
+    for number in range(number_to_multiply):
+        result.append(char)
+    return ''.join(result)
+
+def problem_12(histogram_numbers):
+    result = []
+    for number in histogram_numbers: 
+        result.append([problem_11(number, '*')])
+    return '\n'.join(''.join(inner_list) for inner_list in result)
+
 
 def test():
     print problem_1(3, 4)
@@ -75,5 +87,6 @@ def test():
     print problem_8('radar')
     print problem_9('a', ['2', 2, 45, 'd'])
     print problem_10([1, 2, 3, 4, True], ['lol', 1])
-
+    print problem_11(3, 's')
+    print problem_12([2,3,6])
 test()
