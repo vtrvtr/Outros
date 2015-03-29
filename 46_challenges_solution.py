@@ -15,7 +15,7 @@ def problem_4(char):  # Returns true if vowel else False
     return True if char in 'aeiou' else False
 
 
-def problem_5(string):
+def problem_5(string):  # Do some strange shit from Sweden with a word
     new_string = []
     for char in string:
         if char not in 'aeiou' and char is not ' ':
@@ -25,7 +25,7 @@ def problem_5(string):
     return ''.join(new_string)
 
 
-def problem_6(list_of_numbers, action):
+def problem_6(list_of_numbers, action):  # Multiply or add numbers in a list
     if action == '+':
         result = 0
         for number in list_of_numbers:
@@ -48,13 +48,14 @@ def problem_8(string):  # Returns True if word is palindrome, uses problem_7
     return True if string == problem_7(string) else False
 
 
-def problem_9(token, list_of_things):
+def problem_9(token, list_of_things):  # Check if token is in the list
     for thing in list_of_things:
         if thing == token:
             return True
     return False
 
 
+# Check if list 1 and list 2 have any items in common
 def problem_10(list_one, list_two):
     for item1 in list_one:
         for item2 in list_two:
@@ -62,17 +63,53 @@ def problem_10(list_one, list_two):
                 return True
     return False
 
-def problem_11(number_to_multiply, char):
+
+def problem_11(number_to_multiply, char):  # Return char N times
     result = []
     for number in range(number_to_multiply):
         result.append(char)
     return ''.join(result)
 
+
+# Makes a histogram using problem 11 function
 def problem_12(histogram_numbers):
     result = []
-    for number in histogram_numbers: 
+    for number in histogram_numbers:
         result.append([problem_11(number, '*')])
     return '\n'.join(''.join(inner_list) for inner_list in result)
+
+
+# compare every number in a list and return the biggest
+def problem_13(list_of_numbers):
+    max_n = 0
+    for n in list_of_numbers:
+        if n > max_n:
+            max_n = n
+    return max_n
+
+
+def problem_14(list_of_words):  # Return the len of each word of a list
+    len_of_words = []
+    for word in list_of_words:
+        len_of_words.append(len(word))
+    return len_of_words
+
+
+# Returns the len of the biggest word using problems 14 func
+def problem_15(list_of_words):
+    return max(problem_14(list_of_words))
+
+
+# Returns the words bigger than max_size
+def problem_16(list_of_words, max_size):
+    return [word for word in list_of_words if len(word) > max_size]
+
+
+def problem_17(phrase):  # Returns True is whole phrase is a palindrome
+    phrase = phrase.replace(' ', '')
+    reversed_phrase = ''.join([char for word in reversed(
+        phrase) for char in reversed(word) if char not in ' !.,?'])
+    return True if phrase.lower() == reversed_phrase.lower() else False
 
 
 def test():
@@ -88,5 +125,10 @@ def test():
     print problem_9('a', ['2', 2, 45, 'd'])
     print problem_10([1, 2, 3, 4, True], ['lol', 1])
     print problem_11(3, 's')
-    print problem_12([2,3,6])
+    print problem_12([2, 3, 6])
+    print problem_13([1, 3, 4, 13943, 6, 7])
+    print problem_14(['aaaa', 'ask', 'akshg', '12345j'])
+    print problem_15(['aaa', 'aa', '12354567'])
+    print problem_16(['123', '12345', '12'], 2)
+    print problem_17('Was it a rat I saw')
 test()
