@@ -112,6 +112,22 @@ def problem_17(phrase):  # Returns True is whole phrase is a palindrome
     return True if phrase.lower() == reversed_phrase.lower() else False
 
 
+# Check if phrase has all letters of the alphabet, aka, it's a pagram
+def problem_18(phrase):
+    for char in phrase.lower():
+        if char not in 'abcdefghijklmnopqrstuvxwzy ':
+            print char
+            return False
+    return True
+
+
+def problem_19():  # Loops to sing the 99 beers gon
+    for number in reversed(range(99)):
+        print '''{} bottles of beer on the wall, {} bottles of beer.
+        Take one down, pass it around, {} bottles of beer on the wall.'''.format(number + 1, number + 1, number)
+
+
+
 def test():
     print problem_1(3, 4)
     print problem_2(13, 8, 24)
@@ -131,4 +147,6 @@ def test():
     print problem_15(['aaa', 'aa', '12354567'])
     print problem_16(['123', '12345', '12'], 2)
     print problem_17('Was it a rat I saw')
+    print problem_18('The quick brown fox jumps over the lazy dog')
+    problem_19()
 test()
