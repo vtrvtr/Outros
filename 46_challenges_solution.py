@@ -1,3 +1,7 @@
+from collections import Counter as counter
+import re
+
+
 def problem_1(a, b):    # Returns the max number
     return a if a > b else b
 
@@ -127,6 +131,65 @@ def problem_19():  # Loops to sing the 99 beers gon
         Take one down, pass it around, {} bottles of beer on the wall.'''.format(number + 1, number + 1, number)
 
 
+def problem_20(words):  # Translates from english to swedish
+    word_dict = {"merry": "god", "christmas": "jul", "and": "och",
+                 "happy": "gott", "new": "nytt", "year": "ar"}
+    return ' '.join([word_dict[key] if key in word_dict else key for key in words.lower().split()])
+
+
+def problem_21(phrase):  # Count how many tokens are in a phrase
+    return counter(phrase)
+
+
+def problem_22(cipher, action):  # Ceaser cipher
+    key = {'a': 'n', 'b': 'o', 'c': 'p', 'd': 'q', 'e': 'r', 'f': 's', 'g': 't', 'h': 'u',
+           'i': 'v', 'j': 'w', 'k': 'x', 'l': 'y', 'm': 'z', 'n': 'a', 'o': 'b', 'p': 'c',
+           'q': 'd', 'r': 'e', 's': 'f', 't': 'g', 'u': 'h', 'v': 'i', 'w': 'j', 'x': 'k',
+           'y': 'l', 'z': 'm', 'A': 'N', 'B': 'O', 'C': 'P', 'D': 'Q', 'E': 'R', 'F': 'S',
+           'G': 'T', 'H': 'U', 'I': 'V', 'J': 'W', 'K': 'X', 'L': 'Y', 'M': 'Z', 'N': 'A',
+           'O': 'B', 'P': 'C', 'Q': 'D', 'R': 'E', 'S': 'F', 'T': 'G', 'U': 'H', 'V': 'I',
+           'W': 'J', 'X': 'K', 'Y': 'L', 'Z': 'M'}
+    if action == 'decode':
+        decoded = []
+        for char in cipher:
+            if char == ' ':
+                decoded.append(char)
+            for k, v in key.items():
+                if v == char:
+                    decoded.append(k)
+        return ''.join(decoded)
+    elif action == 'encode':
+        return [key[k] if k is not ' ' else ' ' for k in cipher]
+    else:
+        return 'Usage: cipher decode/encode '
+
+
+def problem_23(phrase):  # Correct mistakes in a phrase
+    if '  ' in phrase:
+        phrase = phrase.replace('  ', ' ')
+    i_dot = phrase.find('.')
+
+    if phrase[i_dot + 1] is not ' ':
+        first_half_of_phrase = phrase[:i_dot + 1]
+        second_half_of_phrase = phrase[i_dot + 1:]
+        return '{} {}'.format(first_half_of_phrase, second_half_of_phrase)
+
+    return phrase
+
+
+def problem_24(verb):  # transforms verb into the 3rd person
+    if verb.endswith('y'):
+        return '{}{}'.format(verb[:-1], 'ies')
+    elif verb.endswith(('o', 'ch', 's', 'sh', 'x', 'z')):
+        return '{}{}'.format(verb, 'es')
+    else:
+        return '{}{}'.format(verb, 's')
+
+def problem_25(verb): # transforms in continuum form
+    if verb.endswith('e') and verb not in ['be', 'see', 'flee', 'knee']:
+        return '{}{}'.format(verb[:-1], 'ing')
+    elif verb.endswith('ie'): 
+        return '{}{}'.format(verb[:-2], 'ying')
 
 def test():
     print problem_1(3, 4)
@@ -149,4 +212,10 @@ def test():
     print problem_17('Was it a rat I saw')
     print problem_18('The quick brown fox jumps over the lazy dog')
     problem_19()
+    print problem_20('Happy merry christmas')
+    print problem_21('aasssasdasdsasdasdasdggbcxvc')
+    print problem_22('Pnrfne pvcure? V zhpu cersre Pnrfne fnynq', 'decode')
+    print problem_23('Yhis   is.ery funny  and    cool.Indeed!')  # INCORRECT
+    print problem_24('try')
+    print problem_25('combine')
 test()
