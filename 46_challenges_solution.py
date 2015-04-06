@@ -3,6 +3,9 @@ import re
 from itertools import permutations
 from itertools import combinations
 from tabulate import tabulate
+import pyttsx
+import time
+from pprint import pprint
 
 
 def problem_1(a, b):    # Returns the max number
@@ -233,13 +236,46 @@ def problem_30(path_to_file):
             if line[0].rstrip() == problem_7(line[1].rstrip()):
                 print "{} {}".format(line[0].rstrip(), line[1].rstrip())
 
-def problem_31(path_to_file): # Prints the char frequency in a nice table using tabulate. Converting the solo values into lists was a must
+
+# Prints the char frequency in a nice table using tabulate. Converting the
+# solo values into lists was a must
+# There's an "update" method that I should use here
+def problem_31(path_to_file):
     total_count = counter()
     with open(path_to_file, 'r') as f:
         for line in f:
             total_count += counter(line.rstrip())
         print tabulate({k: [v] for (k, v) in dict(total_count).items()}, headers='keys')
 
+
+def problem_32(string, word_interval=0, icao_interval=0):
+    engine = pyttsx.init('sapi5')
+    d = {'a': 'alfa', 'b': 'bravo', 'c': 'charlie', 'd': 'delta', 'e': 'echo', 'f': 'foxtrot',
+         'g': 'golf', 'h': 'hotel', 'i': 'india', 'j': 'juliett', 'k': 'kilo', 'l': 'lima',
+         'm': 'mike', 'n': 'november', 'o': 'oscar', 'p': 'papa', 'q': 'quebec', 'r': 'romeo',
+         's': 'sierra', 't': 'tango', 'u': 'uniform', 'v': 'victor', 'w': 'whiskey',
+         'x': 'x-ray', 'y': 'yankee', 'z': 'zulu', ' ': ' '}
+    engine.say(string)
+    engine.runAndWait()
+    rate = engine.getProperty('rate')
+    engine.setProperty('rate', rate + 30)
+    for word in string:
+        for letter in word:
+            time.sleep(icao_interval)
+            engine.say(d[letter])
+            engine.runAndWait()
+
+
+def problem_33(path_to_file): # Returns unique words in a text 
+    with open(path_to_file) as f:
+        word_counter = dict(counter(f))
+        return [k.rstrip() for k,v in word_counter.items() if v == 1]
+
+def problem_34(path_to_file, path_to_written_file): # Enumerates a text
+    with open(path_to_file, 'r') as f:
+        with open(path_to_written_file, 'w') as f2:
+            for i, line in enumerate(f):
+                f2.write('{}. {}'.format(i+1, line))
 
 
 def test():
@@ -275,6 +311,9 @@ def test():
     problem_29('E:\Code\outros\problem_29.txt')
     print problem_30("e:\code\outros\problem_30.txt")
     print problem_31("e:\code\outros\problem_30.txt")
+    #problem_32('ball park', 1, 2)
 
+    pprint(problem_33('E:\code\outros\problem_30.txt'))
+    problem_34('E:\code\outros\problem_30.txt', "E:\code\outros\problem_34.txt")
 
 test()
