@@ -1,5 +1,8 @@
 from collections import Counter as counter
 import re
+from itertools import permutations
+from itertools import combinations
+from tabulate import tabulate
 
 
 def problem_1(a, b):    # Returns the max number
@@ -111,9 +114,9 @@ def problem_16(list_of_words, max_size):
 
 def problem_17(phrase):  # Returns True is whole phrase is a palindrome
     phrase = phrase.replace(' ', '')
-    reversed_phrase = ''.join([char for word in reversed(
+    reversed_phrase = ''.join([char.lower() for word in reversed(
         phrase) for char in reversed(word) if char not in ' !.,?'])
-    return True if phrase.lower() == reversed_phrase.lower() else False
+    return True if phrase.lower() == reversed_phrase else False
 
 
 # Check if phrase has all letters of the alphabet, aka, it's a pagram
@@ -185,11 +188,59 @@ def problem_24(verb):  # transforms verb into the 3rd person
     else:
         return '{}{}'.format(verb, 's')
 
-def problem_25(verb): # transforms in continuum form
-    if verb.endswith('e') and verb not in ['be', 'see', 'flee', 'knee']:
+
+def problem_25(verb):  # transforms in continuum form
+    vowels = 'aeiou'
+    if verb.endswith('e') and verb not in ['be', 'see', 'flee', 'knee', 'lie']:
         return '{}{}'.format(verb[:-1], 'ing')
-    elif verb.endswith('ie'): 
+    elif verb.endswith('ie'):
         return '{}{}'.format(verb[:-2], 'ying')
+    elif verb[-1] not in vowels and verb[-2] in vowels and verb[-3] not in vowels:
+        return '{}{}{}'.format(verb, verb[-1], 'ing')
+    else:
+        return '{}{}'.format(verb, 'ing')
+
+
+# Get the largest value in a list using reduce or just a normal list comp
+def problem_26(list_of_numbers):
+    # f = lambda x,y: x if (x>y) else y
+    # return reduce(f, list_of_numbers)
+    return [a if a > b else b for a, b in zip(list_of_numbers, list_of_numbers[1:])][-1]
+
+
+def problem_27(list_of_words):  # returns the biggest word
+    return [a if len(a) > len(b) else b for a, b in zip(list_of_words, list_of_words[1:])][-1]
+
+
+# returns words bigger the max_size, much like problem 16
+def problem_28(list_of_words, max_size):
+    return [word for word in list_of_words if len(word) > max_size]
+
+
+# Uses problem 17 to print phrases that are palindromes in a file
+def problem_29(path_to_file):
+    with open(path_to_file, 'r') as f:
+        for line in f:
+            if problem_17(line.rstrip()):
+                print line
+
+
+# Using itertools.combinations finds that are the same as some other world
+# of the list  backwards
+def problem_30(path_to_file):
+    with open(path_to_file, 'r') as f:
+        for line in combinations(f, 2):
+            if line[0].rstrip() == problem_7(line[1].rstrip()):
+                print "{} {}".format(line[0].rstrip(), line[1].rstrip())
+
+def problem_31(path_to_file): # Prints the char frequency in a nice table using tabulate. Converting the solo values into lists was a must
+    total_count = counter()
+    with open(path_to_file, 'r') as f:
+        for line in f:
+            total_count += counter(line.rstrip())
+        print tabulate({k: [v] for (k, v) in dict(total_count).items()}, headers='keys')
+
+
 
 def test():
     print problem_1(3, 4)
@@ -209,7 +260,7 @@ def test():
     print problem_14(['aaaa', 'ask', 'akshg', '12345j'])
     print problem_15(['aaa', 'aa', '12354567'])
     print problem_16(['123', '12345', '12'], 2)
-    print problem_17('Was it a rat I saw')
+    print 'Problem 17, ', problem_17('Was it a rat I saw')
     print problem_18('The quick brown fox jumps over the lazy dog')
     problem_19()
     print problem_20('Happy merry christmas')
@@ -217,5 +268,13 @@ def test():
     print problem_22('Pnrfne pvcure? V zhpu cersre Pnrfne fnynq', 'decode')
     print problem_23('Yhis   is.ery funny  and    cool.Indeed!')  # INCORRECT
     print problem_24('try')
-    print problem_25('combine')
+    print problem_25('see')
+    print problem_26([1, 3, 5, 56, 345, 2])
+    print problem_27(['aaa', 'bbbbbb', 'cj'])
+    print problem_28(['aaa', 'bb', 'asdasdasd'], 2)
+    problem_29('E:\Code\outros\problem_29.txt')
+    print problem_30("e:\code\outros\problem_30.txt")
+    print problem_31("e:\code\outros\problem_30.txt")
+
+
 test()
