@@ -6,6 +6,7 @@ from tabulate import tabulate
 import pyttsx
 import time
 from pprint import pprint
+from string import ascii_lowercase
 
 
 def problem_1(a, b):    # Returns the max number
@@ -266,16 +267,27 @@ def problem_32(string, word_interval=0, icao_interval=0):
             engine.runAndWait()
 
 
-def problem_33(path_to_file): # Returns unique words in a text 
+def problem_33(path_to_file):  # Returns unique words in a text
     with open(path_to_file) as f:
         word_counter = dict(counter(f))
-        return [k.rstrip() for k,v in word_counter.items() if v == 1]
+        return [k.rstrip() for k, v in word_counter.items() if v == 1]
 
-def problem_34(path_to_file, path_to_written_file): # Enumerates a text
+
+def problem_34(path_to_file, path_to_written_file):  # Enumerates a text
     with open(path_to_file, 'r') as f:
         with open(path_to_written_file, 'w') as f2:
             for i, line in enumerate(f):
-                f2.write('{}. {}'.format(i+1, line))
+                f2.write('{}. {}'.format(i + 1, line))
+
+
+def problem_35(path_to_file):  # Returns the avg lengh of the words
+    with open(path_to_file) as f:
+        total_words = counter(f)
+    with open(path_to_file) as f:
+        total_chars = counter(letter for line in f
+                              for letter in line.lower()
+                              if letter in ascii_lowercase)
+    return float(sum(total_chars.values())) / float(sum(total_words.values()))
 
 
 def test():
@@ -312,8 +324,10 @@ def test():
     print problem_30("e:\code\outros\problem_30.txt")
     print problem_31("e:\code\outros\problem_30.txt")
     #problem_32('ball park', 1, 2)
-
     pprint(problem_33('E:\code\outros\problem_30.txt'))
-    problem_34('E:\code\outros\problem_30.txt', "E:\code\outros\problem_34.txt")
+    problem_34(
+        'E:\code\outros\problem_30.txt', "E:\code\outros\problem_34.txt")
+    print problem_35('E:\code\outros\problem_30.txt')
+
 
 test()
