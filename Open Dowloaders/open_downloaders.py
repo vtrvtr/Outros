@@ -44,15 +44,12 @@ def close_p(processes):
 
 def main():
     processes = check_process(PROCESSES.keys())
-    print processes
     keyboard_needed = [True if 'CouchPotato.exe' not in processes.keys() else False][0]
-    print keyboard_needed
-
     if processes:
-        close_p(processes.values())
-    else:
         closed_processes = [v for k,v in PROCESSES.items() if k not in processes.keys()]
         open_p(closed_processes)
+    else:
+        close_p(processes.values())
     if keyboard_needed:
         logging.info('{} Keyboard needed'.format(datetime.now()))
         keyboard = PyKeyboard()
