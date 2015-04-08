@@ -44,9 +44,11 @@ def close_p(processes):
 
 def main():
     processes = check_process(PROCESSES.keys())
-    keyboard_needed = [True if 'CouchPotato.exe' not in processes.keys() else False][0]
-    if processes:
-        closed_processes = [v for k,v in PROCESSES.items() if k not in processes.keys()]
+    keyboard_needed = [
+        True if 'CouchPotato.exe' not in processes.keys() else False][0]
+    if processes and len(processes) != 4:
+        closed_processes = [
+            v for k, v in PROCESSES.items() if k not in processes.keys()]
         open_p(closed_processes)
     else:
         close_p(processes.values())
@@ -56,5 +58,5 @@ def main():
         time.sleep(1)
         keyboard.tap_key(keyboard.enter_key)
 
-
-main()
+if __name__ == "__main__":
+    main()
