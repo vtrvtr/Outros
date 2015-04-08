@@ -15,20 +15,18 @@ logging.basicConfig(
 
 
 def check_process(process_name):
-    process_names = []
-    process_pid = []
+    process_dict = {}
     for proc in psutil.process_iter():
         try:
             if proc.name() in process_name:
                 logging.info(
                     '{} {} ({}) found'.format(datetime.now(), proc.name(), proc.pid))
-                process_names.append(proc.name().encode('ascii', 'ignore'))
-                process_pid.append(proc.pid)
-        except:
+                process_dict[proc.name().encode('ascii', 'ignore')] = proc.pid
+        except psutil.AccessDenied:
             logging.error(
                 '{} pid={} access denied'.format(datetime.now(), proc.pid))
             continue
-    return (process_names, process_pid) if len(process_names) > 0 else False
+    return process_dict
 
 
 def open_p(processes):
@@ -46,20 +44,20 @@ def close_p(processes):
 
 def main():
     processes = check_process(PROCESSES.keys())
-    keyboard_needed = any(
-        [True if 'CouchPotato.exe' in value else False for value in processes])
+    print processes
+    keyboard_needed = [True if 'CouchPotato.exe' not in processes.keys() else False][0]
+    print keyboard_needed
+
     if processes:
-        close_p(processes[1])
-    elif processes is False:
-        open_p(PROCESSES.values())
+        close_p(processes.values())
     else:
-        closed_processes = [v for k, v in PROCESSES.items() for i in range(
-            len(processes[0])) if k != processes[0][i]]
+        closed_processes = [v for k,v in PROCESSES.items() if k not in processes.keys()]
         open_p(closed_processes)
     if keyboard_needed:
         logging.info('{} Keyboard needed'.format(datetime.now()))
         keyboard = PyKeyboard()
         time.sleep(1)
         keyboard.tap_key(keyboard.enter_key)
+
 
 main()
