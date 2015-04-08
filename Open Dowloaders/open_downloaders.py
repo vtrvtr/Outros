@@ -9,14 +9,17 @@ PROCESSES = {'CouchPotato.exe': 'C:\Users\\vtrvtr\AppData\Roaming\CouchPotato\\a
 
 
 def check_process(process_name):
-    opened_processes = []
+    process_names = []
+    process_pid = []
     for proc in psutil.process_iter():
         try:
             if proc.name() in process_name:
-                opened_processes.append(proc.pid)
+                print proc.name()
+                process_names.append(proc.name().encode('ascii', 'ignore'))
+                process_pid.append(proc.pid)
         except:
             continue
-    return opened_processes if len(opened_processes) > 0 else False
+    return (process_names, process_pid) if len(process_names) > 0 else False
 
 
 def open_p(processes):
@@ -32,10 +35,17 @@ def close_p(processes):
 
 def main():
     processes = check_process(PROCESSES.keys())
+    print processes
     if processes:
-        close_p(processes)
+        close_p(processes[1])
     else:
-        open_p(PROCESSES.values())
+        open_p(processes[0])
 
 
-print PROCESSES.values()
+p = check_process(PROCESSES.keys())
+
+print p[0][0]
+
+p2 = [v for k,v in PROCESSES.items() for i in range(len(p[0])) if k != p[0][i]]
+
+print p2
