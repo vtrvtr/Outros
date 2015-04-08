@@ -1,6 +1,8 @@
 import subprocess as sp
 import psutil
-from os import kill
+import logging 
+from pykeyboard import PyKeyboard
+import time
 
 PROCESSES = {'CouchPotato.exe': 'C:\Users\\vtrvtr\AppData\Roaming\CouchPotato\\application\CouchPotato.exe',
              'deluge.exe': 'E:\Programs\Deluge\deluge.exe',
@@ -42,6 +44,11 @@ def main():
     else:
         closed_processes = [v for k,v in PROCESSES.items() for i in range(len(processes[0])) if k != processes[0][i]]
         open_p(closed_processes)
+    keyboard = PyKeyboard()
+    time.sleep(1)
+    keyboard.tap_key(keyboard.enter_key)
+
+
 
 
 
