@@ -46,7 +46,8 @@ def main():
     processes = check_process(PROCESSES.keys())
     keyboard_needed = [
         True if 'CouchPotato.exe' not in processes.keys() else False][0]
-    if processes and len(processes) != 4:
+    if len(processes) != 4:
+        print 'lol'
         closed_processes = [
             v for k, v in PROCESSES.items() if k not in processes.keys()]
         open_p(closed_processes)
