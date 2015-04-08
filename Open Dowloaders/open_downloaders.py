@@ -24,7 +24,7 @@ def check_process(process_name):
 
 def open_p(processes):
     for proc in processes:
-        sp.Popen(processes)
+        sp.Popen(proc)
 
 
 def close_p(processes):
@@ -35,17 +35,14 @@ def close_p(processes):
 
 def main():
     processes = check_process(PROCESSES.keys())
-    print processes
     if processes:
         close_p(processes[1])
+    elif processes is False:
+        open_p(PROCESSES.values())
     else:
-        open_p(processes[0])
+        closed_processes = [v for k,v in PROCESSES.items() for i in range(len(processes[0])) if k != processes[0][i]]
+        open_p(closed_processes)
 
 
-p = check_process(PROCESSES.keys())
 
-print p[0][0]
-
-p2 = [v for k,v in PROCESSES.items() for i in range(len(p[0])) if k != p[0][i]]
-
-print p2
+main()
