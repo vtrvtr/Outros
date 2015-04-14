@@ -52,7 +52,7 @@ def add_streams(url, game):
 
 def open_livestreamer(stream_urls):
     for stream_url in stream_urls:
-        Popen('livestreamer {} source -Q'.format(str(stream_url)), shell=True)
+        Popen('livestreamer {} best -Q'.format(str(stream_url)), shell=True)
 
 
 def main(game=None):
