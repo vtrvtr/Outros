@@ -76,14 +76,15 @@ def massive_add(text):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
-    if len(sys.argv) == 2:
-        parser.add_argument('game')
-        args = parser.parse_args()
-        main(args.game)
-    elif len(sys.argv) == 3:
-        parser.add_argument('url',  help="add stream to the list")
-        parser.add_argument('add_game',  help="add stream to the list")
-        args = parser.parse_args()
-        add_streams(args.url, args.add_game)
+    parser.add_argument('-s', help='opens a single stream', action="store")
+    parser.add_argument('-m',  help="open multiple streams", action="store")
+    parser.add_argument('-add', nargs=2,  help="add stream to the list", action="store")
+    args = parser.parse_args()
+    if args.s:
+        open_livestreamer([args.s])
+    elif args.m:    
+        main(args.m)
+    elif args.add:
+        add_streams(args.add[0], args.add[1])
     else:
         main()
