@@ -19,15 +19,17 @@ def add_complain():
     formatted_protocol = ' '.join(
         [protocol[i:i + 3] for i in range(0, len(protocol), 3)])
     logging.info(
-        '\n Service: {} \n Info: {} \n Protocol: {} \n Solution: {}'.format(service, message, formatted_protocol, solution))
-    db.insert({'service': service.lower(), 'protocol': protocol,
-               'message': message.lower(), 'solution': solution.lower()})
+        'ADDED: \n Service: {} \n Info: {} \n Protocol: {} \n Solution: {}'.format(service, message, formatted_protocol, solution)) 
+    db.insert({'service': service.lower(), 'protocol': protocol, 'message': message.lower(), 'solution': solution.lower()})
+
 
 def search(query):
     category, query = query.split()
-    results = db.search(where(category.lower()) == query.lower())
-    for result in results:
-        print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]}'.format(r = result)
+    if category == 'message':
+        results = db.search(where(category.lower()) == query.lower())
+    else:
+        for result in results:
+            print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]}'.format(r=result)
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
@@ -37,8 +39,7 @@ if __name__ == '__main__':
     args = parse.parse_args()
     if args.a:
         add_complain()
-    if args.s: search = raw_input('Search what dude') 
+    elif args.s:
+        search = raw_input('Search what dude')
 
 
-# pprint(db.search(where('service') == 'VIRTUA'))
-search('message internet')
