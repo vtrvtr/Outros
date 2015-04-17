@@ -3,7 +3,7 @@ import argparse
 from tinydb import TinyDB as tdb, where
 from pprint import pprint
 
-FORMATTER = """%(asctime)4s - %(levelname)-1s %(message)s"""
+FORMATTER = """%(asctime)4s - %(levelname)-1s %(message)s \n"""
 
 logging.basicConfig(
     filename='E:\Code\Outros\Virtua Helper\\tmhelper.log', level=logging.INFO, format=FORMATTER)
@@ -19,7 +19,7 @@ def add_complain():
     formatted_protocol = ' '.join(
         [protocol[i:i + 3] for i in range(0, len(protocol), 3)])
     logging.info(
-        'ADDED: \n Service: {} \n Info: {} \n Protocol: {} \n Solution: {}'.format(service, message, formatted_protocol, solution)) 
+        '\nADDED: \n Service: {} \n Info: {} \n Protocol: {} \n Solution: {}'.format(service, message, formatted_protocol, solution)) 
     db.insert({'service': service.lower(), 'protocol': protocol, 'message': message.lower(), 'solution': solution.lower()})
 
 
@@ -30,8 +30,8 @@ def search(query):
     else:
         results = db.search(where(category.lower()) == query.lower())
         for result in results:
-            logging.info('Searched for {}: {}'.format(category, query))
-            print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]}'.format(r=result)
+            logging.info('\nSearched for {}: {}'.format(category, query))
+            print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result)
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
@@ -44,5 +44,4 @@ if __name__ == '__main__':
     elif args.s:
         q = raw_input('Search what dude')
         search(q)
-
 
