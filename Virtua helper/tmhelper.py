@@ -28,6 +28,7 @@ def search(query):
     if category == 'message':
         results = db.search(where(category.lower()) == query.lower())
     else:
+        results = db.search(where(category.lower()) == query.lower())
         for result in results:
             logging.info('Searched for {}: {}'.format(category, query))
             print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]}'.format(r=result)
