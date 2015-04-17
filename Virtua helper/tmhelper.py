@@ -38,10 +38,15 @@ if __name__ == '__main__':
         description="Choose the option, search or add")
     parse.add_argument('-a', help="Adds a new complain", action="store_true")
     parse.add_argument('-s', help="Read and search log files", action="store_true")
+    parse.add_argument('--purge', help='purge db', action="store_true")
     args = parse.parse_args()
     if args.a:
         add_complain()
     elif args.s:
         q = raw_input('Search what dude')
         search(q)
-
+    elif args.purge:
+        db.purge()
+    else:
+        for result in db.all():
+            print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result)
