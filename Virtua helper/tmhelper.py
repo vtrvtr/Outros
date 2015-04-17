@@ -23,10 +23,11 @@ def add_complain():
     db.insert({'service': service.lower(), 'protocol': protocol,
                'message': message.lower(), 'solution': solution.lower()})
 
-
 def search(query):
     category, query = query.split()
-    pprint(db.search(where(category.lower()) == query.lower()))
+    results = db.search(where(category.lower()) == query.lower())
+    for result in results:
+        print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]}'.format(r = result)
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
@@ -40,4 +41,4 @@ if __name__ == '__main__':
 
 
 # pprint(db.search(where('service') == 'VIRTUA'))
-search('service asd')
+search('message internet')
