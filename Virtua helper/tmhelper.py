@@ -29,13 +29,14 @@ def search(query):
         results = db.search(where(category.lower()) == query.lower())
     else:
         for result in results:
+            logging.info('Searched for {}: {}'.format(category, query))
             print ' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]}'.format(r=result)
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
         description="Choose the option, search or add")
     parse.add_argument('-a', help="Adds a new complain", action="store_true")
-    parse.add_argument('-s', help="Read and search log files")
+    parse.add_argument('-s', help="Read and search log files", action="store_true")
     args = parse.parse_args()
     if args.a:
         add_complain()
