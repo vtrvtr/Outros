@@ -41,6 +41,7 @@ if __name__ == '__main__':
     if args.a:
         add_complain()
     elif args.s:
-        search = raw_input('Search what dude')
+        q = raw_input('Search what dude')
+        search(q)
 
 
