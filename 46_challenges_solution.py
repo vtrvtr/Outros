@@ -1,4 +1,5 @@
 from collections import Counter as counter
+import random
 import re
 from itertools import permutations
 from itertools import combinations
@@ -290,7 +291,18 @@ def problem_35(path_to_file):  # Returns the avg lengh of the words
     return float(sum(total_chars.values())) / float(sum(total_words.values()))
 
 
+def problem_36(): # guessing game
+    print "Welcome to the guessing game\n"
+    print "What's your name?\n"
+    print "Alright, take a guess between 1 and 20, {}!".format(raw_input())
+    n = random.randint(1, 20)
+    guesses = 1
+    while raw_input() != str(n):
+        print "Take a guess, you already took {} guesses".format(guesses)
+        guesses += 1
+    print "Correct! It only took {} guesses to figure it out!".format(guesses) 
 def test():
+
     print problem_1(3, 4)
     print problem_2(13, 8, 24)
     print problem_3([2, 2, 2, 2, 2, 2])
@@ -328,6 +340,7 @@ def test():
     problem_34(
         'E:\code\outros\problem_30.txt', "E:\code\outros\problem_34.txt")
     print problem_35('E:\code\outros\problem_30.txt')
+    problem_36()
 
 
 test()

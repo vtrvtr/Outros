@@ -1,11 +1,17 @@
 import logging
+import argparse
+from tinydb import TinyDB as tdb, where
+from pprint import pprint
 
 FORMATTER = """%(asctime)4s - %(levelname)-1s %(message)s"""
 
 logging.basicConfig(
-    filename='E:\Code\Outros\Virtua Helper\\tmhelper.log', level=logging.INFO, format = FORMATTER) 
+    filename='E:\Code\Outros\Virtua Helper\\tmhelper.log', level=logging.INFO, format=FORMATTER)
 
-def main():
+db = tdb("E:\\Code\Outros\Virtua helper\complain_db.json")
+
+
+def add_complain():
     service = raw_input("Type the service\n")
     message = raw_input("Explain the problem\n")
     protocol = raw_input("Type the protocol\n")
@@ -14,6 +20,24 @@ def main():
         [protocol[i:i + 3] for i in range(0, len(protocol), 3)])
     logging.info(
         '\n Service: {} \n Info: {} \n Protocol: {} \n Solution: {}'.format(service, message, formatted_protocol, solution))
+    db.insert({'service': service.lower(), 'protocol': protocol,
+               'message': message.lower(), 'solution': solution.lower()})
+
+
+def search(query):
+    category, query = query.split()
+    pprint(db.search(where(category.lower()) == query.lower()))
 
 if __name__ == '__main__':
-    main()
+    parse = argparse.ArgumentParser(
+        description="Choose the option, search or add")
+    parse.add_argument('-a', help="Adds a new complain")
+    parse.add_argument('-s', help="Read and search log files")
+    args = parse.parse_args()
+    if args.a:
+        add_complain()
+    if args.s: search = raw_input('Search what dude') 
+
+
+# pprint(db.search(where('service') == 'VIRTUA'))
+search('service asd')

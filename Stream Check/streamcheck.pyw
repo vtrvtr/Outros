@@ -78,7 +78,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
     parser.add_argument('-s', help='opens a single stream', action="store")
     parser.add_argument('-m',  help="open multiple streams", action="store")
-    parser.add_argument('-add', nargs=2,  help="add stream to the list", action="store")
+    parser.add_argument('-add', nargs=2,  help="add stream to the list URL GAME", action="store")
     args = parser.parse_args()
     if args.s:
         open_livestreamer([args.s])
