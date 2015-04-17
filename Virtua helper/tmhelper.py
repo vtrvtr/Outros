@@ -34,7 +34,7 @@ def search(query):
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
         description="Choose the option, search or add")
-    parse.add_argument('-a', help="Adds a new complain")
+    parse.add_argument('-a', help="Adds a new complain", action="store_true")
     parse.add_argument('-s', help="Read and search log files")
     args = parse.parse_args()
     if args.a:
