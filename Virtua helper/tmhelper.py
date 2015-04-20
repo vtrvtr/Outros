@@ -36,7 +36,7 @@ def search(query):
         results = db.search(where(category.lower()) == query.lower())
         for result in results:
             logging.info('\nSearched for {}: {}'.format(category, query))
-            print u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1')
+            print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1'))
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
@@ -53,7 +53,8 @@ if __name__ == '__main__':
     elif args.purge:
         db.purge()
     else:
+        log = '\nPRINTING ALL DATABASE'
         for result in db.all():
-            logging.info('PRINTNIG ALL DATABASE:')
-            logging.info(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1'))
+            log = log + u'\n Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1')
             print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1'))
+        logging.info(log)
