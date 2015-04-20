@@ -59,8 +59,8 @@ if __name__ == '__main__':
     elif args.purge:
         db.purge()
     else:
-        log = '\nPRINTING ALL DATABASE'
         for result in db.all():
-            log = log + u'\n Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1')
-            print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=result).encode('latin-1'))
-        logging.info(log)
+            print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(
+                r=result).encode('latin-1'))
+        logging.info('\nPRINTING ALL RESULTS \n{}'.format('\n'.join(
+            [u'Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=dic).encode('latin-1') for dic in db.all()])))
