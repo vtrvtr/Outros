@@ -57,7 +57,7 @@ def open_livestreamer(stream_urls, verbose = True):
         Popen('livestreamer {} best -Q'.format(str(stream_url)), shell=verbose)
 
 
-def main(verbose = True, game=None):
+def main(game=None, verbose = True):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():

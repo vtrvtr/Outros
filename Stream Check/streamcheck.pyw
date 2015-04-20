@@ -57,7 +57,7 @@ def open_livestreamer(stream_urls, verbose = True):
         Popen('livestreamer {} best -Q'.format(str(stream_url)), shell=verbose)
 
 
-def main(verbose = True, game=None):
+def main(game=None, verbose = True):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
     parser.add_argument('-s', help='opens a single stream', action="store")
     parser.add_argument('-m',  help="open multiple streams", action="store")
-    parser.add_argument('-add', help="add stream to the list URL GAME", nargs=2 action="store")
+    parser.add_argument('-add', help="add stream to the list URL GAME", nargs=2, action="store")
     parser.add_argument('--verbose', help="Makes cmd windows appear")
     args = parser.parse_args()
     verbose = False if args.verbose else True
