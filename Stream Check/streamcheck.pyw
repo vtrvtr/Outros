@@ -81,7 +81,7 @@ if __name__ == "__main__":
     parser.add_argument('-s', help='opens a single stream', action="store")
     parser.add_argument('-m',  help="open multiple streams", action="store")
     parser.add_argument('-add', help="add stream to the list URL GAME", nargs=2, action="store")
-    parser.add_argument('--verbose', help="Makes cmd windows appear")
+    parser.add_argument('-v', '--verbose', help="Makes cmd windows appear", action="store_true")
     args = parser.parse_args()
     verbose = False if args.verbose else True
     if args.s:
