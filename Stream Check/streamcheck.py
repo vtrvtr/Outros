@@ -1,3 +1,5 @@
+#!python3
+
 import argparse
 import logging
 import sys
@@ -50,18 +52,18 @@ def add_streams(url, game):
         json.dump(stream_dict.getAllStreams(), f)
 
 
-def open_livestreamer(stream_urls):
+def open_livestreamer(stream_urls, verbose = True):
     for stream_url in stream_urls:
-        Popen('livestreamer {} source -Q'.format(str(stream_url)))
+        Popen('livestreamer {} best -Q'.format(str(stream_url)), shell=verbose)
 
 
-def main(game=None):
+def main(verbose = True, game=None):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():
-            open_livestreamer(v)
+            open_livestreamer(v, verbose)
     else:
-        open_livestreamer(streams.getGameStreams(game.upper()))
+        open_livestreamer(streams.getGameStreams(game.upper()), verbose)
 
 
 def massive_add(text):
@@ -76,14 +78,20 @@ def massive_add(text):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
-    if len(sys.argv) == 2:
-        parser.add_argument('game')
-        args = parser.parse_args()
-        main(args.game)
-    elif len(sys.argv) == 3:
-        parser.add_argument('url',  help="add stream to the list")
-        parser.add_argument('add_game',  help="add stream to the list")
-        args = parser.parse_args()
-        add_streams(args.url, args.add_game)
+    parser.add_argument('-s', help='opens a single stream', action="store")
+    parser.add_argument('-m',  help="open multiple streams", action="store")
+    parser.add_argument('-add', help="add stream to the list URL GAME", nargs=2, action="store")
+    parser.add_argument('--verbose', help="Makes cmd windows appear")
+    args = parser.parse_args()
+    verbose = False if args.verbose else True
+    if args.s:
+        open_livestreamer([args.s], verbose)
+    elif args.m:    
+        main(args.m, verbose)
+    elif args.add:
+        add_streams(args.add[0], args.add[1])
     else:
         main()
+
+
+

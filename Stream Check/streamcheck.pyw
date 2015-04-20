@@ -1,3 +1,5 @@
+#!python3
+
 import argparse
 import logging
 import sys
@@ -78,7 +80,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
     parser.add_argument('-s', help='opens a single stream', action="store")
     parser.add_argument('-m',  help="open multiple streams", action="store")
-    parser.add_argument('-add', nargs=2,  help="add stream to the list URL GAME", action="store")
+    parser.add_argument('-add', help="add stream to the list URL GAME", nargs=2 action="store")
     parser.add_argument('--verbose', help="Makes cmd windows appear")
     args = parser.parse_args()
     verbose = False if args.verbose else True
