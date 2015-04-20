@@ -85,7 +85,7 @@ if __name__ == "__main__":
     if args.s:
         open_livestreamer([args.s], verbose)
     elif args.m:    
-        main(verbose, args.m)
+        main(args.m, verbose)
     elif args.add:
         add_streams(args.add[0], args.add[1])
     else:
