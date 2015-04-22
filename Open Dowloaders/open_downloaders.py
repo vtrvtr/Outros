@@ -9,7 +9,8 @@ import argparse
 PROCESSES = {'CouchPotato.exe': 'C:\Users\\vtrvtr\AppData\Roaming\CouchPotato\\application\CouchPotato.exe',
              'deluge.exe': 'E:\Programs\Deluge\deluge.exe',
              "SABnzbd.exe": 'E:\Programs\SABnzb\SABnzbd.exe',
-             'transmission-qt.exe': 'E:\Programs\Transmission\\transmission-qt.exe'}
+             'transmission-qt.exe': 'E:\Programs\Transmission\\transmission-qt.exe',
+             'nzbget.exe': 'E:\Programs\NZBGet\\nzbget.exe -s'}
 
 logging.basicConfig(
     filename='E:\Code\Outros\Open Dowloaders\open_downloaders.log', level=logging.INFO)
@@ -45,7 +46,7 @@ def close_p(processes):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Opens or closes processes for Downloaders (CouchPotato, SabNzb, Deluge and Transmission")
+        description="Opens or closes processes for Downloaders (Nzbget, CouchPotato, SabNzb, Deluge and Transmission")
     parser.add_argument(
         '--open', '-o', help="Open processes \n OBS: 'all' opens all processes", nargs='*', default=[])
     parser.add_argument(
@@ -57,7 +58,8 @@ def main():
     translate_dic = {'couch': 'CouchPotato.exe',
                      'sab': 'SABnzbd.exe',
                      'transmission': 'transmission-qt.exe',
-                     'deluge': 'deluge.exe'}
+                     'deluge': 'deluge.exe',
+                     'nzb': 'nzbget.exe'}
     if args.open == ['all']:
         open_p(PROCESSES.values())
     elif args.open and args.open is not False:
@@ -71,6 +73,7 @@ def main():
         processes_to_close = [v
                               for k, v in translate_dic.items() if k in args.close]
         close_p(check_process(processes_to_close).values())
+    #This fixed the silly CouchPotato bug with its icon on windows
     if keyboard_needed:
         logging.info('{} Keyboard needed'.format(datetime.now()))
         keyboard = PyKeyboard()
