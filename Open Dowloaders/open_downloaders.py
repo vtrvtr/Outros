@@ -4,6 +4,7 @@ import logging
 from pykeyboard import PyKeyboard
 import time
 from datetime import datetime
+import argparse
 
 PROCESSES = {'CouchPotato.exe': 'C:\Users\\vtrvtr\AppData\Roaming\CouchPotato\\application\CouchPotato.exe',
              'deluge.exe': 'E:\Programs\Deluge\deluge.exe',
@@ -43,19 +44,37 @@ def close_p(processes):
 
 
 def main():
-    processes = check_process(PROCESSES.keys())
+    parser = argparse.ArgumentParser(
+        description="Opens or closes processes for Downloaders (CouchPotato, SabNzb, Deluge and Transmission")
+    parser.add_argument(
+        '--open', '-o', help="Open processes \n OBS: 'all' opens all processes", nargs='*', default=[])
+    parser.add_argument(
+        '--close', '-c', default=[], help="Close processes \n OBS: 'all' closes all processes", nargs='*')
+    args = parser.parse_args()
     keyboard_needed = [
-        True if 'CouchPotato.exe' not in processes.keys() else False][0]
-    if len(processes) != 4:
-        closed_processes = [
-            v for k, v in PROCESSES.items() if k not in processes.keys()]
-        open_p(closed_processes)
-    else:
-        close_p(processes.values())
+        True if 'couch' in args.open or 'couch' in args.close else False][0]
+    # QOL change here to make easier to open / close specific processes
+    translate_dic = {'couch': 'CouchPotato.exe',
+                     'sab': 'SABnzbd.exe',
+                     'transmission': 'transmission-qt.exe',
+                     'deluge': 'deluge.exe'}
+    if args.open == ['all']:
+        open_p(PROCESSES.values())
+    elif args.open and args.open is not False:
+        # Get processes paths
+        processes_to_open = [PROCESSES[v]
+                             for k, v in translate_dic.items() if k in args.open]
+        open_p(processes_to_open)
+    if args.close == ['all']:
+        close_p(check_process(PROCESSES.keys()).values())
+    elif args.close != ['all'] and args.close is not False:
+        processes_to_close = [v
+                              for k, v in translate_dic.items() if k in args.close]
+        close_p(check_process(processes_to_close).values())
     if keyboard_needed:
         logging.info('{} Keyboard needed'.format(datetime.now()))
         keyboard = PyKeyboard()
-        time.sleep(1)
+        time.sleep(3)
         keyboard.tap_key(keyboard.enter_key)
 
 if __name__ == "__main__":
