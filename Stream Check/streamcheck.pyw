@@ -38,6 +38,7 @@ class Streams(object):  # Base stream class, you need to load the dictionary
 STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
 TEXT_PATH = 'E:\\Documents\livestreamer.txt'
 
+
 def open_dict():
     with open(STREAM_LIST_PATH) as f:
         read_dict = json.load(f)
@@ -54,16 +55,18 @@ def add_streams(url, game):
 
 def open_livestreamer(stream_urls, quality, verbose):
     for stream_url in stream_urls:
-        Popen('livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
+        Popen(
+            'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
 
 
-def main(game=None, quality = 'source', verbose = False):
+def main(game=None, quality='source', verbose=False):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():
             open_livestreamer(v, quality, verbose)
     else:
-        open_livestreamer(streams.getGameStreams(game.upper()), quality, verbose)
+        open_livestreamer(
+            streams.getGameStreams(game.upper()), quality, verbose)
 
 
 def massive_add(text):
@@ -78,21 +81,23 @@ def massive_add(text):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
-    parser.add_argument('--single', '-s', help='opens a single stream', action="store")
-    parser.add_argument('--multi','-m',  help="open multiple streams", action="store")
-    parser.add_argument('--add', '-a', help="add stream to the list URL GAME", nargs=2, action="store")
-    parser.add_argument('-v', '--verbose', help="Makes cmd windows appear", action="store_true")
-    parser.add_argument('--quality', '-q', help='Chooses the quality to open streams, default = source', default='source')
+    parser.add_argument(
+        '--single', '-s', help='opens a single stream', action="store")
+    parser.add_argument(
+        '--multi', '-m',  help="open multiple streams", action="store")
+    parser.add_argument(
+        '--add', '-a', help="add stream to the list URL GAME", nargs=2, action="store")
+    parser.add_argument(
+        '-v', '--verbose', help="Makes cmd windows appear", action="store_true")
+    parser.add_argument(
+        '--quality', '-q', help='Chooses the quality to open streams, default = source', default='source')
     args = parser.parse_args()
     verbose = False if args.verbose else True
     if args.single:
         open_livestreamer([args.s], args.quality, verbose)
-    elif args.multi:    
+    elif args.multi:
         main(args.multi, args.quality, verbose)
     elif args.add:
         add_streams(args.add[0], args.add[1])
     else:
         main()
-
-
-
