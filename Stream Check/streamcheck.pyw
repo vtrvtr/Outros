@@ -59,7 +59,7 @@ def open_livestreamer(stream_urls, quality, verbose):
             'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
 
 
-def main(game=None, quality='source', verbose=False):
+def main(game=None, quality='source', verbose=True):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():
