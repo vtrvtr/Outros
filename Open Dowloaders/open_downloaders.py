@@ -51,6 +51,7 @@ def main():
         '--open', '-o', help="Open processes \n OBS: 'all' opens all processes", nargs='*', default=[])
     parser.add_argument(
         '--close', '-c', default=[], help="Close processes \n OBS: 'all' closes all processes", nargs='*')
+    parser.add_argument('--quality', '-q', help='Chooses the quality to open streams, default = source', default='source')
     args = parser.parse_args()
     keyboard_needed = [
         True if 'couch' in args.open or 'couch' in args.close else False][0]
