@@ -37,10 +37,16 @@ class Streams(object):  # Base stream class, you need to load the dictionary
 
 STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
 TEXT_PATH = 'E:\\Documents\livestreamer.txt'
+LOG_PATH = 'E:\Code\outros\stream check\stream_check.log'
+FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
+
+logging.basicConfig(
+    filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
 
 
 def open_dict():
     with open(STREAM_LIST_PATH) as f:
+        logging.info('Opening dictionary') 
         read_dict = json.load(f)
         stream_dict = Streams(read_dict)
     return stream_dict
@@ -51,12 +57,14 @@ def add_streams(url, game):
     stream_dict.addStream(game.upper(), str(url))
     with open(STREAM_LIST_PATH, 'w') as f:
         json.dump(stream_dict.getAllStreams(), f)
+        logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
 def open_livestreamer(stream_urls, quality, verbose):
     for stream_url in stream_urls:
         Popen(
             'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
+        logging.info('Trying to open: {} \n Quality: {} \n verbose: {}'.format(stream_url, quality, verbose))
 
 
 def main(game=None, quality='source', verbose=True):
@@ -94,7 +102,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     verbose = False if args.verbose else True
     if args.single:
-        open_livestreamer([args.s], args.quality, verbose)
+        open_livestreamer([args.single], args.quality, verbose)
     elif args.multi:
         main(args.multi, args.quality, verbose)
     elif args.add:
