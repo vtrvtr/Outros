@@ -4,8 +4,6 @@ import logging
 from pathlib import Path
 
 
-
-
 def transverse_directory(directory):
     yield directory
     for sub in directory.iterdir():
@@ -15,9 +13,8 @@ def transverse_directory(directory):
             yield sub
 
 
-def move_files(source, dest='', extensions=[]):
-    if dest == '':
-        dest = Path(source)
+def move_files(source, dest=None, extensions=[]):
+    dest = dest or source.parent
     for f in transverse_directory(Path(source)):
         if not f.is_dir():
             if f.suffix in extensions or len(extensions) == 0:
@@ -38,5 +35,15 @@ def rename(source, season='1', extensions=['.mkv', '.mp4', '.mov']):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Renames files properly for easy Sonarr recognition')
-    parser.add_argument('--move', '-m', nargs=2, default=[args.move[0], ''])
+    parser = argparse.ArgumentParser(
+        description='Renames files properly for easy Sonarr recognition')
+    parser.add_argument('--move', '-m', help="Move all files with the EXTENSIONS from SOURCE to DEST \n default dest = source.parent", nargs='+')
+    parser.add_argument(
+        '--rename', '-r', help="Rename all files in SOURCE folder, needs to provide the correct SEASON", nargs='+')
+    args = parser.parse_args()
+    
+
+
+
+if __name__ == '__main__':
+    main()
