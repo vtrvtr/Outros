@@ -18,9 +18,8 @@ class Serie(object):
             for season in show:
                 if None in self.seasons or season in self.seasons:
                     for _, name in show[season].items():
-                        # yield str(name).split()[1].split('x')
-                        yield map(str, (name['dvd_season'], name['episodenumber'], name['episodename']))
-
+                        # yield season
+                        yield u'S{}{}E{}{} - {}'.format('0' if season < 10 else '', season, '0' if int(name['episodenumber']) < 10 else '',name['episodenumber'], name['episodename']).encode('utf-8')
 
         except tvdb_api.tvdb_shownotfound:
             raise
@@ -28,7 +27,8 @@ class Serie(object):
 
 
 
-a = Serie('Code geass')
+a = Serie()
 
 for epi in a.get_episodes(1):
-    print 'S{}{}E{}{} - {}'.format('0' if int(epi[0]) < 10 else '', epi[0], '0' if int(epi[1]) < 10 else '',epi[1], epi[2])
+    print epi
+    # print 'S{}{}E{}{} - {}'.format('0' if int(epi[0]) < 10 else '', epi[0], '0' if int(epi[1]) < 10 else '',epi[1], epi[2])
