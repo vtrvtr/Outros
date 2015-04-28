@@ -1,34 +1,40 @@
 import tvdb_api
-import sys
-# sys.path.insert(0, 'E:\\code\outros\\renamer\\renamer.py')
-import renamer
+from pytvdbapi import api
 from pathlib import Path
+import renamer
+import sys
+
 
 
 class Serie(object):
 
-    def __init__(self, series_name):
+    def __init__(self, series_name, language='en'):
         self.name = series_name
-        self.t = tvdb_api.Tvdb()
+        self.db = api.TVDB('667CE371BAA23809')
+        self.show = self.db.search(series_name, language)[0]
+
 
     def get_episodes(self, seasons=None):
         self.seasons = [seasons] or seasons
-        try:
-            show = self.t[self.name]
-            for season in show:
-                if None in self.seasons or season in self.seasons:
-                    for _, name in show[season].items():
-                        # yield season
-                        yield u'S{}{}E{}{} - {}'.format('0' if season < 10 else '', season, '0' if int(name['episodenumber']) < 10 else '',name['episodenumber'], name['episodename']).encode('utf-8')
-
-        except tvdb_api.tvdb_shownotfound:
-            raise
+        if seasons is None:
+            for episode in self.show:
+                yield episode.SeasonNumber, episode.EpisodeNumber, episode.EpisodeName
+        else:
+            for season in self.seasons:
+                for episode in self.show[season]:
+                    yield episode.SeasonNumber, episode.EpisodeNumber, ''.join([letter for letter in episode.EpisodeName if letter not in '!:,'])
 
 
 
 
-a = Serie()
+a = Serie('code geass')
 
-for epi in a.get_episodes(1):
-    print epi
-    # print 'S{}{}E{}{} - {}'.format('0' if int(epi[0]) < 10 else '', epi[0], '0' if int(epi[1]) < 10 else '',epi[1], epi[2])
+b = list(a.get_episodes(1))
+
+# print(u'{}'.format(b[19][2]).encode('utf8'))]
+
+# print(type(b[19][0]))
+
+
+renamer.rename(Path("E:\\", 'code', 'outros', 'renamer', 'test'), b[0])
+# print 'S{}{}E{}{} - {}'.format('0' if int(epi[0]) < 10 else '', epi[0], '0' if int(epi[1]) < 10 else '',epi[1], epi[2])
