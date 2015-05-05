@@ -1,5 +1,3 @@
-import subprocess as sp
-import psutil
 import logging
 from pykeyboard import PyKeyboard
 import time

@@ -2,7 +2,7 @@ import argparse
 import shutil
 import logging
 from pathlib import Path, WindowsPath
-
+from tbdb import Serie
 
 def transverse_directory(directory):
     yield directory
@@ -47,33 +47,9 @@ def count_files(source):
     return len([f for f in source.iterdir() if f.is_file])
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='Renames files properly for easy Sonarr recognition')
-    parser.add_argument(
-        '--move', '-m', help="Move all files with the EXTENSIONS from SOURCE to DEST \n default dest = source", action='store_true')
-    parser.add_argument(
-        '--rename', '-r', help="Rename all files in SOURCE folder, needs to provide the correct SEASON", action='store_true')
-    args = parser.parse_args()
-    if args.move:
-        source = input('Where are the files now?\n')
-        dest = input(
-            'Where the files should be? \ntype ENTER for default folder\n')
-        dest = dest if dest is not '' else None
-        extensions = input(
-            'Extensions of files you want to move \n type nothing to default types \n')
-        extensions = extensions if extensions is not '' else [
-            '.mkv', '.mp4', '.mov']
-        move_files(source, dest, extensions)
-    elif args.rename:
-        source = input('Where are the files now?\n')
-        season = input('What\'s the season?\n type nothing to 1')
-        season = season if season is not '' else '1'
-        extensions = input(
-            'Extensions of files you want to move \n type nothing to default types \n')
-        extensions = extensions if extensions is not '' else [
-            '.mkv', '.mp4', '.mov']
-        rename(source, season, extensions)
 
-# if __name__ == '__main__':
-#     main()
+a = Serie('naruto')
+
+
+
+b = a.get_episode(1, 1)
