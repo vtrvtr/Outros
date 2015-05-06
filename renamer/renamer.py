@@ -4,6 +4,7 @@ import logging
 from pathlib import Path, WindowsPath
 from tbdb import Serie
 
+
 def transverse_directory(directory):
     yield directory
     for sub in directory.iterdir():
@@ -26,9 +27,18 @@ def move_files(source, dest=None, extensions=[]):
                     pass
 
 
-def rename(source, epi_info_list, extensions=['all']):
+def count_files(source):
     if type(source) is not WindowsPath:
         source = Path(source)
+    return len([f for f in source.iterdir() if f.is_file])
+
+
+def rename(source, epi_info_list, extensions=['all']):
+    files_in_folder = count_files(source)
+    if type(source) is not WindowsPath:
+        source = Path(source)
+    if files_in_folder != len(epi_info_list):
+        return 'Number of files different from number of episodes \n Files in folder: {} \n # of Episodes: {}'.format(files_in_folder, len(epi_info_list))
     for episode, epi_info in zip(source.iterdir(), epi_info_list):
         if not episode.is_dir():
             if episode.suffix in extensions or 'all' in extensions:
@@ -41,15 +51,14 @@ def rename(source, epi_info_list, extensions=['all']):
                 episode.replace(path)
 
 
-def count_files(source):
-    if type(source) is not WindowsPath:
-        source = Path(source)
-    return len([f for f in source.iterdir() if f.is_file])
+a = Serie('madoka')
+
+
+path = Path('E:\\', 'code', 'examples')
+
+
+b = list(a.get_episodes(1))
 
 
 
-a = Serie('naruto')
-
-
-
-b = a.get_episode(1, 1)
+print(rename(path, b))
