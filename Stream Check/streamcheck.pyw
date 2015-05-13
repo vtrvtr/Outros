@@ -2,9 +2,9 @@
 
 import argparse
 import logging
-import sys
 from subprocess import Popen
 import json
+from livestreamer import streams, Livestreamer
 
 
 class Streams(object):  # Base stream class, you need to load the dictionary
@@ -42,11 +42,12 @@ FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
 
 logging.basicConfig(
     filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
+logging.getLogger("requests").setLevel(logging.WARNING)
 
 
 def open_dict():
     with open(STREAM_LIST_PATH) as f:
-        logging.info('Opening dictionary') 
+        logging.info('Opening dictionary')
         read_dict = json.load(f)
         stream_dict = Streams(read_dict)
     return stream_dict
@@ -61,10 +62,17 @@ def add_streams(url, game):
 
 
 def open_livestreamer(stream_urls, quality, verbose):
+    session = Livestreamer()
+    session.set_loglevel('none')
     for stream_url in stream_urls:
-        Popen(
-            'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
-        logging.info('Trying to open: {} \n Quality: {} \n verbose: {}'.format(stream_url, quality, verbose))
+        try:
+            if session.streams(stream_url):
+                Popen(
+                    'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
+                logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
+                    stream_url, quality, verbose))
+        except Exception as e:
+            logging.error('Couldnt open: {}'.format(stream_url))
 
 
 def main(game=None, quality='source', verbose=True):
