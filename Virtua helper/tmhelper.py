@@ -5,7 +5,7 @@ from tinydb import TinyDB as tdb, where
 from pprint import pprint
 import sys
 # reload(sys)
-# sys.setdefaultencoding('latin-1')
+# sys.setdefaultencoding('utf-8')
 
 
 FORMATTER = """%(asctime)4s - %(levelname)-1s %(message)s \n"""
@@ -38,7 +38,7 @@ def search(query):
         for result in results:
             logging.info('\nSearched for {}: {}'.format(category, query))
             print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(
-                r=result).encode('latin-1'))
+                r=result).encode('utf-8'))
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
