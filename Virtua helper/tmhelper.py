@@ -61,6 +61,6 @@ if __name__ == '__main__':
     else:
         for result in db.all():
             print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(
-                r=result).encode('latin-1'))
+                r=result).encode('utf-8'))
         logging.info('\nPRINTING ALL RESULTS \n{}'.format('\n'.join(
             [u'Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=dic).encode('latin-1') for dic in db.all()])))

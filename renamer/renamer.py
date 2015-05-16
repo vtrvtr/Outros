@@ -50,15 +50,3 @@ def rename(source, epi_info_list, extensions=['all']):
                                                        0], 0 if epi_info[1] < 10 else '', epi_info[1], str(epi_info[2]))
                 episode.replace(path)
 
-
-a = Serie('madoka')
-
-
-path = Path('E:\\', 'code', 'examples')
-
-
-b = list(a.get_episodes(1))
-
-
-
-print(rename(path, b))
