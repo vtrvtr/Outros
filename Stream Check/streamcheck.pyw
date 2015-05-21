@@ -6,15 +6,24 @@ from subprocess import Popen
 import json
 from livestreamer import streams as livestreamer_stream
 from stream_lib import Streams
-
-STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
-TEXT_PATH = 'E:\\Documents\livestreamer.txt'
-LOG_PATH = 'E:\Code\outros\stream check\stream_check.log'
-FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
+import configparser
+from configparser import SafeConfigParser, ParsingError, BasicInterpolation
 
 
-logging.basicConfig(
-    filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
+# Reading and loading configs
+try:
+    conf = SafeConfigParser()
+    conf.read('config.ini')
+    STREAM_LIST_PATH = conf.get('stream_dict', 'path')
+    TEXT_PATH = conf.get('massiveadd', 'path')
+    LOG_PATH = conf.get('log', 'path')
+    FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
+    logging.basicConfig(
+        filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
+except ParsingError as e:
+    logging.error(e)
+
+
 
 
 def open_dict():
@@ -29,7 +38,7 @@ def add_streams(url, game):
     stream_dict = open_dict()
     stream_dict.addStream(game.upper(), str(url))
     with open(STREAM_LIST_PATH, 'w') as f:
-        json.dump(stream_dict.getAllStreams(), f)
+        json.dump(stream_dict.getAllStreams(), fj)
         logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
@@ -50,6 +59,7 @@ def open_livestreamer(stream_urls, quality, verbose):
                 logging.error('Couldnt open: {} ({})'.format(stream_url, e))
             else:
                 logging.error('Couldnt open: {}'.format(stream_url))
+
 
 def massive_add(text):
     with open(text, 'r') as f:
