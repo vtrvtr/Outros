@@ -4,7 +4,7 @@ import argparse
 import logging
 from subprocess import Popen
 import json
-from livestreamer import streams, Livestreamer
+from livestreamer import streams as livestreamer_stream
 
 
 class Streams(object):  # Base stream class, you need to load the dictionary
@@ -40,9 +40,13 @@ TEXT_PATH = 'E:\\Documents\livestreamer.txt'
 LOG_PATH = 'E:\Code\outros\stream check\stream_check.log'
 FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
 
-logging.basicConfig(
-    filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
-logging.getLogger("requests").setLevel(logging.WARNING)
+
+if args.verbose:
+    pass
+else:
+    logging.basicConfig(
+        filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
+    logging.getLogger("requests").setLevel(logging.WARNING)
 
 
 def open_dict():
@@ -62,8 +66,7 @@ def add_streams(url, game):
 
 
 def check_stream(url):
-    # session.set_loglevel('none')
-    return True if streams(url) else False
+    return True if livestreamer_stream(url) else False
 
 
 def open_livestreamer(stream_urls, quality, verbose):
@@ -78,16 +81,6 @@ def open_livestreamer(stream_urls, quality, verbose):
             logging.error('Couldnt open: {}'.format(stream_url))
 
 
-def main(game=None, quality='source', verbose=True):
-    streams = open_dict()
-    if game == None:
-        for v in streams.getAllStreams().values():
-            open_livestreamer(v, quality, verbose)
-    else:
-        open_livestreamer(
-            streams.getGameStreams(game.upper()), quality, verbose)
-
-
 def massive_add(text):
     with open(text, 'r') as f:
         lines = [line.strip() for line in f.readlines()]
@@ -97,6 +90,17 @@ def massive_add(text):
             else:
                 url = line.split()
                 add_streams(''.join(url[1::3]), game)
+
+
+def main(game=None, quality='source', verbose=True):
+    streams = open_dict()
+    if game == None:
+        for v in streams.getAllStreams().values():
+            open_livestreamer(v, quality, verbose)
+    else:
+        open_livestreamer(
+            streams.getGameStreams(game.upper()), quality, verbose)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
