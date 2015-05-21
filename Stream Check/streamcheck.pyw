@@ -5,35 +5,7 @@ import logging
 from subprocess import Popen
 import json
 from livestreamer import streams as livestreamer_stream
-
-
-class Streams(object):  # Base stream class, you need to load the dictionary
-
-    def __init__(self, stream_dict=None):
-        if stream_dict is not None:
-            self.streams = stream_dict
-        else:
-            self.streams = {}
-
-    def addStream(self, game, stream_url):
-        try:
-            if stream_url not in self.streams[game.upper()]:
-                self.streams[game.upper()].append(stream_url)
-            else:
-                pass
-        except:
-            self.streams[game.upper()] = [stream_url]
-
-    def getStream(self, stream_url):
-        for v in self.streams.values():
-            if v == stream_url:
-                return v
-
-    def getAllStreams(self):
-        return self.streams
-
-    def getGameStreams(self, game):
-        return self.streams[game]
+from stream_lib import Streams
 
 STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
 TEXT_PATH = 'E:\\Documents\livestreamer.txt'
@@ -41,12 +13,8 @@ LOG_PATH = 'E:\Code\outros\stream check\stream_check.log'
 FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
 
 
-if args.verbose:
-    pass
-else:
-    logging.basicConfig(
-        filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
-    logging.getLogger("requests").setLevel(logging.WARNING)
+logging.basicConfig(
+    filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
 
 
 def open_dict():
@@ -94,6 +62,8 @@ def massive_add(text):
 
 def main(game=None, quality='source', verbose=True):
     streams = open_dict()
+    if not args.verbose:
+        logging.getLogger("requests").setLevel(logging.WARNING)
     if game == None:
         for v in streams.getAllStreams().values():
             open_livestreamer(v, quality, verbose)
