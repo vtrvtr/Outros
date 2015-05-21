@@ -61,12 +61,15 @@ def add_streams(url, game):
         logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
+def check_stream(url):
+    # session.set_loglevel('none')
+    return True if streams(url) else False
+
+
 def open_livestreamer(stream_urls, quality, verbose):
-    session = Livestreamer()
-    session.set_loglevel('none')
     for stream_url in stream_urls:
         try:
-            if session.streams(stream_url):
+            if check_stream(stream_url):
                 Popen(
                     'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
                 logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
