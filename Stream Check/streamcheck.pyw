@@ -46,8 +46,10 @@ def open_livestreamer(stream_urls, quality, verbose):
                 logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
                     stream_url, quality, verbose))
         except Exception as e:
-            logging.error('Couldnt open: {}'.format(stream_url))
-
+            if args.verbose:
+                logging.error('Couldnt open: {} ({})'.format(stream_url, e))
+            else:
+                logging.error('Couldnt open: {}'.format(stream_url))
 
 def massive_add(text):
     with open(text, 'r') as f:
