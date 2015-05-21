@@ -4,45 +4,26 @@ import argparse
 import logging
 from subprocess import Popen
 import json
-from livestreamer import streams, Livestreamer
+from livestreamer import streams as livestreamer_stream
+from stream_lib import Streams
+import configparser
+from configparser import SafeConfigParser, ParsingError, BasicInterpolation
 
 
-class Streams(object):  # Base stream class, you need to load the dictionary
+# Reading and loading configs
+try:
+    conf = SafeConfigParser()
+    conf.read('E:\code\outros\stream check\config.ini')
+    STREAM_LIST_PATH = conf.get('stream_dict', 'path')
+    TEXT_PATH = conf.get('massiveadd', 'path')
+    LOG_PATH = conf.get('log', 'path')
+    FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
+    logging.basicConfig(
+        filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
+    logging.getLogger("requests").setLevel(logging.WARNING)
+except ParsingError as e:
+    print(e)
 
-    def __init__(self, stream_dict=None):
-        if stream_dict is not None:
-            self.streams = stream_dict
-        else:
-            self.streams = {}
-
-    def addStream(self, game, stream_url):
-        try:
-            if stream_url not in self.streams[game.upper()]:
-                self.streams[game.upper()].append(stream_url)
-            else:
-                pass
-        except:
-            self.streams[game.upper()] = [stream_url]
-
-    def getStream(self, stream_url):
-        for v in self.streams.values():
-            if v == stream_url:
-                return v
-
-    def getAllStreams(self):
-        return self.streams
-
-    def getGameStreams(self, game):
-        return self.streams[game]
-
-STREAM_LIST_PATH = 'E:\Code\Outros\stream_list.json'
-TEXT_PATH = 'E:\\Documents\livestreamer.txt'
-LOG_PATH = 'E:\Code\outros\stream check\stream_check.log'
-FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
-
-logging.basicConfig(
-    filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
-logging.getLogger("requests").setLevel(logging.WARNING)
 
 
 def open_dict():
@@ -57,33 +38,30 @@ def add_streams(url, game):
     stream_dict = open_dict()
     stream_dict.addStream(game.upper(), str(url))
     with open(STREAM_LIST_PATH, 'w') as f:
-        json.dump(stream_dict.getAllStreams(), f)
+        json.dump(stream_dict.getAllStreams(), fj)
         logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
-def open_livestreamer(stream_urls, quality, verbose):
-    session = Livestreamer()
-    session.set_loglevel('none')
-    for stream_url in stream_urls:
-        logging.info(session.streams(stream_url))
-        try:
-            if session.streams(stream_url):
-                Popen(
-                    'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
-                logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
-                    stream_url, quality, verbose))
-        except Exception as e:
+def check_stream(url):
+    try:
+        if livestreamer_stream(url):
+            return True
+        else:
+            return False
+    except Exception as e:
+        if args.verbose:
             logging.error('Couldnt open: {} ({})'.format(stream_url, e))
+        else:
+            logging.error('Couldnt open: {}'.format(stream_url))
 
 
-def main(game=None, quality='source', verbose=True):
-    streams = open_dict()
-    if game == None:
-        for v in streams.getAllStreams().values():
-            open_livestreamer(v, quality, verbose)
-    else:
-        open_livestreamer(
-            streams.getGameStreams(game.upper()), quality, verbose)
+def open_livestreamer(stream_urls, quality, verbose):
+    for stream_url in stream_urls:
+        if check_stream(stream_url):
+            Popen(
+                'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
+            logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
+                stream_url, quality, verbose))
 
 
 def massive_add(text):
@@ -95,6 +73,17 @@ def massive_add(text):
             else:
                 url = line.split()
                 add_streams(''.join(url[1::3]), game)
+
+
+def main(game=None, quality='source', verbose=True):
+    streams = open_dict()
+    if game == None:
+        for v in streams.getAllStreams().values():
+            open_livestreamer(v, quality, verbose)
+    else:
+        open_livestreamer(
+            streams.getGameStreams(game.upper()), quality, verbose)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
@@ -118,4 +107,3 @@ if __name__ == "__main__":
         add_streams(args.add[0], args.add[1])
     else:
         main()
-

@@ -13,16 +13,16 @@ from configparser import SafeConfigParser, ParsingError, BasicInterpolation
 # Reading and loading configs
 try:
     conf = SafeConfigParser()
-    conf.read('config.ini')
+    conf.read('E:\code\outros\stream check\config.ini')
     STREAM_LIST_PATH = conf.get('stream_dict', 'path')
     TEXT_PATH = conf.get('massiveadd', 'path')
     LOG_PATH = conf.get('log', 'path')
     FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
     logging.basicConfig(
         filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
+    logging.getLogger("requests").setLevel(logging.WARNING)
 except ParsingError as e:
-    logging.error(e)
-
+    print(e)
 
 
 
@@ -43,22 +43,25 @@ def add_streams(url, game):
 
 
 def check_stream(url):
-    return True if livestreamer_stream(url) else False
+    try:
+        if livestreamer_stream(url):
+            return True
+        else:
+            return False
+    except Exception as e:
+        if args.verbose:
+            logging.error('Couldnt open: {} ({})'.format(stream_url, e))
+        else:
+            logging.error('Couldnt open: {}'.format(stream_url))
 
 
 def open_livestreamer(stream_urls, quality, verbose):
     for stream_url in stream_urls:
-        try:
-            if check_stream(stream_url):
-                Popen(
-                    'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
-                logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
-                    stream_url, quality, verbose))
-        except Exception as e:
-            if args.verbose:
-                logging.error('Couldnt open: {} ({})'.format(stream_url, e))
-            else:
-                logging.error('Couldnt open: {}'.format(stream_url))
+        if check_stream(stream_url):
+            Popen(
+                'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
+            logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
+                stream_url, quality, verbose))
 
 
 def massive_add(text):
@@ -74,8 +77,6 @@ def massive_add(text):
 
 def main(game=None, quality='source', verbose=True):
     streams = open_dict()
-    if not args.verbose:
-        logging.getLogger("requests").setLevel(logging.WARNING)
     if game == None:
         for v in streams.getAllStreams().values():
             open_livestreamer(v, quality, verbose)
