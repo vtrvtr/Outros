@@ -6,8 +6,8 @@ from subprocess import Popen
 import json
 from livestreamer import streams as livestreamer_stream
 from stream_lib import Streams
-import configparser
-from configparser import SafeConfigParser, ParsingError, BasicInterpolation
+from configparser import SafeConfigParser, ParsingError
+from shutil import copy
 
 
 # Reading and loading configs
@@ -15,6 +15,7 @@ try:
     conf = SafeConfigParser()
     conf.read('E:\code\outros\stream check\config.ini')
     STREAM_LIST_PATH = conf.get('stream_dict', 'path')
+    STREAM_BACKUP_PATH = conf.get('stream_dict', 'backup')
     TEXT_PATH = conf.get('massiveadd', 'path')
     LOG_PATH = conf.get('log', 'path')
     FORMATTER = '%(asctime)-15s | %(levelname)-8s \n %(message)-8s'
@@ -37,8 +38,13 @@ def open_dict():
 def add_streams(url, game):
     stream_dict = open_dict()
     stream_dict.addStream(game.upper(), str(url))
+    try:
+        copy(STREAM_LIST_PATH, STREAM_BACKUP_PATH)
+        logging.info('Backing up stream list at {}'.format(STREAM_BACKUP_PATH))
+    except Exception as e:
+        logging.error('Backup failed: {}'.format(e))
     with open(STREAM_LIST_PATH, 'w') as f:
-        json.dump(stream_dict.getAllStreams(), fj)
+        json.dump(stream_dict.getAllStreams(), f)
         logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
