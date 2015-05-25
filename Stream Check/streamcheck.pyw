@@ -58,7 +58,7 @@ def check_stream(url):
         if args.verbose:
             logging.error('Couldnt open: {} ({})'.format(stream_url, e))
         else:
-            logging.error('Couldnt open: {}'.format(stream_url))
+            logging.error('Couldnt open: {}'.format(url))
 
 
 def open_livestreamer(stream_urls, quality, verbose):
