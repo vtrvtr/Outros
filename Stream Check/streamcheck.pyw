@@ -8,6 +8,7 @@ from livestreamer import streams as livestreamer_stream
 from stream_lib import Streams
 from configparser import SafeConfigParser, ParsingError
 from shutil import copy
+import webbrowser
 
 
 # Reading and loading configs
@@ -22,9 +23,9 @@ try:
     logging.basicConfig(
         filename=LOG_PATH, level=logging.INFO, format=FORMATTER)
     logging.getLogger("requests").setLevel(logging.WARNING)
+    browser = webbrowser.get('windows-default')
 except ParsingError as e:
     print(e)
-
 
 
 def open_dict():
@@ -61,9 +62,12 @@ def check_stream(url):
             logging.error('Couldnt open: {}'.format(url))
 
 
-def open_livestreamer(stream_urls, quality, verbose):
+def open_livestreamer(stream_urls, quality, verbose, chat):
     for stream_url in stream_urls:
         if check_stream(stream_url):
+            if chat:
+                webbrowser.open_new_tab(
+                    '{}/{}'.format(str(stream_url), 'chat'))
             Popen(
                 'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
             logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
@@ -81,14 +85,14 @@ def massive_add(text):
                 add_streams(''.join(url[1::3]), game)
 
 
-def main(game=None, quality='source', verbose=True):
+def main(game=None, quality='source', verbose=True, chat=False):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():
-            open_livestreamer(v, quality, verbose)
+            open_livestreamer(v, quality, chat, verbose, chat)
     else:
         open_livestreamer(
-            streams.getGameStreams(game.upper()), quality, verbose)
+            streams.getGameStreams(game.upper()), quality, verbose, chat)
 
 
 if __name__ == "__main__":
@@ -102,11 +106,14 @@ if __name__ == "__main__":
     parser.add_argument(
         '-v', '--verbose', help="Makes cmd windows appear", action="store_true")
     parser.add_argument(
+        '-c', '--chat', help="Opens twitch chat if available", action="store_true")
+    parser.add_argument(
         '--quality', '-q', help='Chooses the quality to open streams, default = source', default='source')
     args = parser.parse_args()
     verbose = False if args.verbose else True
+    chat = True if args.chat else False
     if args.single:
-        open_livestreamer([args.single], args.quality, verbose)
+        open_livestreamer([args.single], args.quality, verbose, chat)
     elif args.multi:
         main(args.multi, args.quality, verbose)
     elif args.add:
