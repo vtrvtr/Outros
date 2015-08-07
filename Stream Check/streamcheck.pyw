@@ -89,7 +89,7 @@ def main(game=None, quality='source', verbose=True, chat=False):
     streams = open_dict()
     if game == None:
         for v in streams.getAllStreams().values():
-            open_livestreamer(v, quality, chat, verbose, chat)
+            open_livestreamer(v, quality, verbose, chat)
     else:
         open_livestreamer(
             streams.getGameStreams(game.upper()), quality, verbose, chat)
