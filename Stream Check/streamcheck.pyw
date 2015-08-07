@@ -115,7 +115,7 @@ if __name__ == "__main__":
     if args.single:
         open_livestreamer([args.single], args.quality, verbose, chat)
     elif args.multi:
-        main(args.multi, args.quality, verbose)
+        main(args.multi, args.quality, verbose, chat)
     elif args.add:
         add_streams(args.add[0], args.add[1])
     else:
