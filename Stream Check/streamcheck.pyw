@@ -9,6 +9,8 @@ from stream_lib import Streams
 from configparser import SafeConfigParser, ParsingError
 from shutil import copy
 import webbrowser
+from movewindows import change_monitor
+
 
 
 # Reading and loading configs
@@ -93,6 +95,9 @@ def main(game=None, quality='source', verbose=True, chat=False):
     else:
         open_livestreamer(
             streams.getGameStreams(game.upper()), quality, verbose, chat)
+
+
+
 
 
 if __name__ == "__main__":
