@@ -9,7 +9,8 @@ from stream_lib import Streams
 from configparser import SafeConfigParser, ParsingError
 from shutil import copy
 import webbrowser
-from movewindows import change_monitor
+from movewindows import change_monitor, init_wizard
+import time
 
 
 
@@ -72,8 +73,13 @@ def open_livestreamer(stream_urls, quality, verbose, chat):
                     '{}/{}'.format(str(stream_url), 'chat'))
             Popen(
                 'livestreamer {} {} -Q'.format(str(stream_url), quality), shell=verbose)
+
             logging.info('Opening: {} \n Quality: {} \n verbose: {}'.format(
                 stream_url, quality, verbose))
+
+            time.sleep(16)
+            change_monitor(init_wizard())
+
 
 
 def massive_add(text):
