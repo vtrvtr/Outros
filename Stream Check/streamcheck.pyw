@@ -60,7 +60,7 @@ def check_stream(url):
             return False
     except Exception as e:
         if args.verbose:
-            logging.error('Couldnt open: {} ({})'.format(stream_url, e))
+            logging.error('Couldnt open: {} ({})'.format(url, e))
         else:
             logging.error('Couldnt open: {}'.format(url))
 
