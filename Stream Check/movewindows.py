@@ -13,6 +13,7 @@ def init_wizard():
         warnings.warn('App not find')
 
 
+
 def get_position(app):
     pos = app.Rectangle()
     return pos.left, pos.top, pos.width(), pos.height()
@@ -31,7 +32,11 @@ def change_monitor(app, monitor='monitor1', width=1920, height=1080):
         height of the windows (def: 1080)'''
     monitors_pos = {'monitor1': -1080, 'monitor2': 0}
     app = init_wizard()
-    app.MoveWindow(x=0, y=monitors_pos[monitor], width=1920, height=1080)
+    try:
+        app.MoveWindow(x=0, y=monitors_pos[monitor], width=1920, height=1080)
+    except AttributeError:
+        warnings.warn('No windows to move')
+
 
 
 def toggle_visibility(app, action='minimize'):
