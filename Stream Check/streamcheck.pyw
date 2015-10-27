@@ -132,4 +132,4 @@ if __name__ == "__main__":
     elif args.add:
         add_streams(args.add[0], args.add[1])
     else:
-        main()
+        main(monitor=args.monitor, quality=args.quality, chat=chat)
