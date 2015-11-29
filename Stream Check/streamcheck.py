@@ -13,7 +13,6 @@ from movewindows import change_monitor, init_wizard
 import time
 
 
-
 # Reading and loading configs
 try:
     conf = SafeConfigParser()
@@ -81,7 +80,6 @@ def open_livestreamer(stream_urls, quality, verbose, chat, monitor):
             change_monitor(init_wizard(), monitor=monitor)
 
 
-
 def massive_add(text):
     with open(text, 'r') as f:
         lines = [line.strip() for line in f.readlines()]
@@ -99,11 +97,12 @@ def main(game=None, quality='source', verbose=True, chat=False, monitor='monitor
         for v in streams.getAllStreams().values():
             open_livestreamer(v, quality, verbose, chat, monitor)
     else:
-        open_livestreamer(
-            streams.getGameStreams(game.upper()), quality, verbose, chat, monitor)
-
-
-
+        for game_category in game:
+            open_livestreamer(
+                streams.getGameStreams(game_category.upper()), quality, verbose, chat, monitor)
+        # open_livestreamer(
+        # streams.getGameStreams(game.upper()), quality, verbose, chat,
+        # monitor)
 
 
 if __name__ == "__main__":
@@ -111,7 +110,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--single', '-s', help='opens a single stream', action="store")
     parser.add_argument(
-        '--multi', '-m',  help="open multiple streams", action="store")
+        '--multi', '-m',  help="open multiple streams", nargs='*', action="store")
     parser.add_argument(
         '--add', '-a', help="add stream to the list URL GAME", nargs=2, action="store")
     parser.add_argument(
@@ -126,7 +125,8 @@ if __name__ == "__main__":
     verbose = False if args.verbose else True
     chat = True if args.chat else False
     if args.single:
-        open_livestreamer([args.single], args.quality, verbose, chat, args.monitor)
+        open_livestreamer(
+            [args.single], args.quality, verbose, chat, args.monitor)
     elif args.multi:
         main(args.multi, args.quality, verbose, chat, args.monitor)
     elif args.add:
