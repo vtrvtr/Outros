@@ -94,8 +94,8 @@ def massive_add(text):
 def main(game=None, quality='source', verbose=True, chat=False, monitor='monitor1'):
     streams = open_dict()
     if game == None:
-        for v in streams.getAllStreams().values():
-            open_livestreamer(v, quality, verbose, chat, monitor)
+        for stream in streams:
+            open_livestreamer(stream, quality, verbose, chat, monitor)
     else:
         for game_category in game:
             open_livestreamer(
