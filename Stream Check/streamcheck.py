@@ -99,7 +99,7 @@ def main(game=None, quality='source', verbose=True, chat=False, monitor='monitor
     else:
         for game_category in game:
             open_livestreamer(
-                streams.getGameStreams(game_category.upper()), quality, verbose, chat, monitor)
+                streams[game_category.upper()], quality, verbose, chat, monitor)
 
 
 if __name__ == "__main__":
