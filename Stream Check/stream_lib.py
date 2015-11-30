@@ -21,10 +21,16 @@ class Streams(object):  # Base stream class, you need to load the dictionary
             if v == stream_url:
                 return v
 
-    def getAllStreams(self):
-        return self.streams
-
     def getGameStreams(self, game):
         return self.streams[game]
+
+    def __len__(self):
+        return len(self.streams)
+
+    def __iter__(self):
+        for game_category, streams in self.streams.items():
+            yield streams
+
+
 
 
