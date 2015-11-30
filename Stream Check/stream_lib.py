@@ -21,15 +21,18 @@ class Streams(object):  # Base stream class, you need to load the dictionary
             if v == stream_url:
                 return v
 
-    def getGameStreams(self, game):
-        return self.streams[game]
-
     def __len__(self):
         return len(self.streams)
 
     def __iter__(self):
         for game_category, streams in self.streams.items():
             yield streams
+
+    def __getitem__(self, game_category):
+        try:
+            return self.streams[game_category]
+        except KeyError:
+            raise KeyError('No game category with this name')
 
 
 
