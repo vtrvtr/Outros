@@ -25,7 +25,7 @@ def add_complain():
         [protocol[i:i + 3] for i in range(0, len(protocol), 3)])
     logging.info(
         '\nADDED: \n Service: {} \n Info: {} \n Protocol: {} \n Solution: {}'.format(service, message, formatted_protocol, solution))
-    db.insert({'service': service.lower(), 'protocol': protocol,
+    db.insert({'service': service.lower(), 'protocol': formatted_protocol,
                'message': message.lower(), 'solution': solution.lower()})
 
 
