@@ -1,4 +1,4 @@
-#!python3
+#!python2
 
 import argparse
 import logging
@@ -9,7 +9,7 @@ from stream_lib import Streams
 from configparser import SafeConfigParser, ParsingError
 from shutil import copy
 import webbrowser
-from movewindows import change_monitor, init_wizard
+from movewindows import WindowsPosition
 import time
 
 
@@ -77,7 +77,8 @@ def open_livestreamer(stream_urls, quality, verbose, chat, monitor):
                 stream_url, quality, verbose))
 
             time.sleep(16)
-            change_monitor(init_wizard(), monitor=monitor)
+            windows = WindowsPosition()
+            windows.move(monitor)
 
 
 def massive_add(text):
@@ -99,7 +100,7 @@ def main(game=None, quality='source', verbose=True, chat=False, monitor='monitor
     else:
         for game_category in game:
             open_livestreamer(
-                streams.getGameStreams(game_category.upper()), quality, verbose, chat, monitor)
+                streams[game_category.upper()], quality, verbose, chat, monitor)
 
 
 if __name__ == "__main__":
@@ -117,7 +118,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--quality', '-q', help='Chooses the quality to open streams, default = source', default='source')
     parser.add_argument(
-        '--monitor', '-mn', help='Chooses the monitor to open, default = monitor1, n (see movewindows.py)', default='monitor1')
+        '--monitor', '-mn', help='Chooses the monitor to open, default = monitor1, n (see movewindows.py)', default='monitor1', action="store")
     args = parser.parse_args()
     verbose = False if args.verbose else True
     chat = True if args.chat else False
