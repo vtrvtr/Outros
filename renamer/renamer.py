@@ -42,7 +42,7 @@ def rename(source, epi_info_list, extensions=['all']):
     for episode, epi_info in zip(source.iterdir(), epi_info_list):
         if not episode.is_dir():
             if episode.suffix in extensions or 'all' in extensions:
-                with open(str(source / '{}_backup.txt'.format(source.name)), 'w+', encoding='utf-8') as f:
+                with open(str(source / '{}_backup.txt'.format(source.name)), 'a', encoding='utf-8') as f:
                     f.write('{}\n'.format(episode.name))
                 # Goddanm japanese fucking characters are so sensitive when it
                 # comes to strings, this fixes it
@@ -50,3 +50,27 @@ def rename(source, epi_info_list, extensions=['all']):
                                                        0], 0 if epi_info[1] < 10 else '', epi_info[1], str(epi_info[2]))
                 episode.replace(path)
 
+
+def main(source_path, epi_info_list, extensions):
+    rename(source_path, epi_info_list, extensions)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="Rename files accordingly to TVDB info")
+    parser.add_argument(
+        '--path', '-p', help='Source path of the folder with video files', action="store")
+    parser.add_argument('--info', '-i', help="Series name", action="store")
+    parser.add_argument(
+        '--extensions', '-e', help='media file extensions', default=['all'])
+    args = parser.parse_args()
+    if args.info:
+        try:
+            serie = Serie(args.info)
+        except Exception as e:
+            print(e)
+    else:
+        print('wrong info')
+    seasons = input('Which season to you like? Nothing for all seasons')
+    for episode in serie.get_episodes(int(seasons)):
+        print(episode)

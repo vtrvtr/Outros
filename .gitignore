@@ -1,0 +1,7 @@
+.google-cookie
+*.dmp
+*.txt
+*.json
+*.pyc
+*.log
+*.ini

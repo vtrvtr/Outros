@@ -7,6 +7,7 @@ import sys
 # reload(sys)
 # sys.setdefaultencoding('utf-8')
 
+### ADD TIME TO DATABASE
 
 FORMATTER = """%(asctime)4s - %(levelname)-1s %(message)s \n"""
 
@@ -45,7 +46,7 @@ if __name__ == '__main__':
         description="Choose the option, search or add")
     parse.add_argument('-a', help="Adds a new complain", action="store_true")
     parse.add_argument(
-        '-s', help="Read and search log files", action="store_true")
+        '-s', help="Read and search log files \n USAGE: CATEGORY QUERY ", action="store_true")
     parse.add_argument('--purge', help='purge db', action="store_true")
     args = parse.parse_args()
     if args.a:
