@@ -42,12 +42,12 @@ def add_streams(url, game):
     stream_dict = open_dict()
     stream_dict.addStream(game.upper(), str(url))
     try:
-        copy(STREAM_LIST_PATH, STREAM_BACKUP_PATH)
+        # copy(STREAM_LIST_PATH, STREAM_BACKUP_PATH)
         logging.info('Backing up stream list at {}'.format(STREAM_BACKUP_PATH))
     except Exception as e:
         logging.error('Backup failed: {}'.format(e))
     with open(STREAM_LIST_PATH, 'w') as f:
-        json.dump(list(stream_dict), f)
+        json.dump(stream_dict.streams, f)
         logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Game streams to open')
     parser.add_argument(
         '--single', '-s', help='opens a single stream', action="store")
-    parser.add_argument(
+    parser.add_argument( 
         '--multi', '-m',  help="open multiple streams", nargs='*', action="store")
     parser.add_argument(
         '--add', '-a', help="add stream to the list URL GAME", nargs=2, action="store")
@@ -131,3 +131,5 @@ if __name__ == "__main__":
         add_streams(args.add[0], args.add[1])
     else:
         main()
+
+
