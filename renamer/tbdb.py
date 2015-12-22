@@ -25,15 +25,18 @@ class Serie(object):
 
     def get_episodes(self, seasons=None):
         self.seasons = [seasons] or seasons
+        self.episodes = []
         if seasons is None:
-            for episode in self.show:
-                yield episode.SeasonNumber, episode.EpisodeNumber, ''.join([letter for letter in episode.EpisodeName if letter not in '?!:,'])
+            for season in self.show:
+                for episode in season:
+                    self.episodes.append((episode.SeasonNumber, episode.EpisodeNumber, ''.join([letter for letter in episode.EpisodeName if letter not in '?!:,'])))
         else:
             for season in self.seasons:
-                for episode in self.show[season]:
-                    yield episode.SeasonNumber, episode.EpisodeNumber, ''.join([letter for letter in episode.EpisodeName if letter not in '?!:,'])
+                for episode in self.show[int(season)]:
+                    self.episodes.append((episode.SeasonNumber, episode.EpisodeNumber, ''.join([letter for letter in episode.EpisodeName if letter not in '?!:,'])))
+        return self.episodes
 
-    def print_episodes(self, seasons=None):
+    def __str__(self, seasons=None):
         self.seasons = [seasons] or seasons
         if seasons is None:
             for episode in self.show:
