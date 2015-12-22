@@ -1,3 +1,5 @@
+#!python3
+
 import argparse
 import shutil
 import logging
@@ -47,8 +49,6 @@ def rename(source, epi_info, extensions=['all']):
             if episode.suffix in extensions or 'all' in extensions:
                 with open(str(source / '{}_backup.txt'.format(source.name)), 'a', encoding='utf-8') as f:
                     f.write('{}\n'.format(episode.name))
-                # Goddanm japanese fucking characters are so sensitive when it
-                # comes to strings, this fixes it
                 path = "{}\S{}{}E{}{} - {}.mkv".format(str(source), 0 if epi_info[0] < 10 else '', epi_info[
                                                        0], 0 if epi_info[1] < 10 else '', epi_info[1], str(epi_info[2]))
                 episode.replace(path)
@@ -75,12 +75,12 @@ if __name__ == '__main__':
         seasons = input('Which season to you like? Nothing for all seasons ')
         if seasons == '':
             seasons = None
-        # for episode in serie.get_episodes(seasons):
-        #     print(episode)
-        # confirm = input('Do want to rename? y/n')
-        # if not confirm:
-        #     sys.exit()
-        # else:
-        main(args.path, serie.get_episodes(seasons), args.extensions)
+        for episode in serie.get_episodes(seasons):
+            print(episode)
+        confirm = input('Do want to rename? Type nothing to cancel ')
+        if confirm == '':
+            sys.exit()
+        else:
+            main(args.path, serie.get_episodes(seasons), args.extensions)
     else:
         print('wrong info')
