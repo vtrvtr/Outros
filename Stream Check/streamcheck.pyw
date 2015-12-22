@@ -47,7 +47,7 @@ def add_streams(url, game):
     except Exception as e:
         logging.error('Backup failed: {}'.format(e))
     with open(STREAM_LIST_PATH, 'w') as f:
-        json.dump(stream_dict.getAllStreams(), f)
+        json.dump(list(stream_dict), f)
         logging.info('Added url: {} \n category: {}'.format(url, game))
 
 
