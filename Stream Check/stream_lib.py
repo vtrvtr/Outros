@@ -21,6 +21,10 @@ class Streams(object):  # Base stream class, you need to load the dictionary
             if v == stream_url:
                 return v
 
+    def __str__(self):
+        return '\n'.join(['Category: {}\nstream: {}'.format(categories,stream) for categories,streams in self.streams.items() for stream in streams])
+
+
     def __len__(self):
         return len(self.streams)
 
@@ -33,7 +37,4 @@ class Streams(object):  # Base stream class, you need to load the dictionary
             return self.streams[game_category]
         except KeyError:
             raise KeyError('No game category with this name')
-
-
-
 
