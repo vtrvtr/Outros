@@ -4,10 +4,6 @@ import argparse
 from tinydb import TinyDB as tdb, where
 from pprint import pprint
 import sys
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
-
-### ADD TIME TO DATABASE
 
 FORMATTER = """%(asctime)4s - %(levelname)-1s %(message)s \n"""
 
@@ -30,16 +26,22 @@ def add_complain():
                'message': message.lower(), 'solution': solution.lower()})
 
 
+def format_single_entry(entry):
+    return u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(
+        r=entry).encode('utf-8')
+
+
 def search(query):
     category, query = query.split()
-    if category == 'message':
-        results = db.search(where(category.lower()) == query.lower())
+    if category == 'message' or category == 'solution':
+        for entry in db.all():
+            if query.lower().encode('utf-8') in entry['message'].encode('utf-8'):
+                print(format_single_entry(entry))
     else:
         results = db.search(where(category.lower()) == query.lower())
         for result in results:
             logging.info('\nSearched for {}: {}'.format(category, query))
-            print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(
-                r=result).encode('utf-8'))
+            print(format_single_entry(result))
 
 if __name__ == '__main__':
     parse = argparse.ArgumentParser(
@@ -52,16 +54,16 @@ if __name__ == '__main__':
     if args.a:
         add_complain()
     elif args.s:
-        q = raw_input('Search what dude\n')
+        q = raw_input(
+            'Type what you want search (service, protocol, message...) followed by the QUERY\n')
         try:
             search(q)
-        except ValueError:
-            print('Usage: CATEGORY(service, message, protocol...) QUERY')
+        except ValueError as e:
+            print(e)
     elif args.purge:
         db.purge()
     else:
         for result in db.all():
-            print(u' Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(
-                r=result).encode('utf-8'))
+            print(format_single_entry(result))
         logging.info('\nPRINTING ALL RESULTS \n{}'.format('\n'.join(
             [u'Service: {r[service]} \n Protocol: {r[protocol]} \n Message: {r[message]} \n Solution: {r[solution]} \n'.format(r=dic).encode('utf-8') for dic in db.all()])))
